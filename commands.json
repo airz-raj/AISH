@@ -1,0 +1,62 @@
+{
+  "ls": {
+    "darwin": "ls",
+    "linux": "ls",
+    "windows": "dir"
+  },
+  "ls -la": {
+    "darwin": "ls -la",
+    "linux": "ls -la",
+    "windows": "dir /a"
+  },
+  "clear": {
+    "darwin": "clear",
+    "linux": "clear",
+    "windows": "cls"
+  },
+  "pwd": {
+    "darwin": "pwd",
+    "linux": "pwd",
+    "windows": "cd"
+  },
+  "mkdir": {
+    "darwin": "mkdir",
+    "linux": "mkdir",
+    "windows": "mkdir"
+  },
+  "rm": {
+    "darwin": "rm",
+    "linux": "rm",
+    "windows": "del"
+  },
+  "cp": {
+    "darwin": "cp",
+    "linux": "cp",
+    "windows": "copy"
+  },
+  "mv": {
+    "darwin": "mv",
+    "linux": "mv",
+    "windows": "move"
+  },
+  "cat": {
+    "darwin": "cat",
+    "linux": "cat",
+    "windows": "type"
+  },
+  "find": {
+    "darwin": "find . -name",
+    "linux": "find . -name",
+    "windows": "dir /s /b"
+  },
+  "du": {
+    "darwin": "du -sh",
+    "linux": "du -sh",
+    "windows": "dir /s"
+  },
+  "whoami": {
+    "darwin": "whoami",
+    "linux": "whoami",
+    "windows": "whoami"
+  }
+}

@@ -1,0 +1,14 @@
+typer
+rich
+prompt_toolkit
+bashlex
+thefuzz
+openai
+maigret
+holehe
+theHarvester
+photon
+colorama
+prompt_toolkit
+pyfiglet
+psutil

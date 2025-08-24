@@ -1,0 +1,106 @@
+[
+  {
+    "time": "Unknown time",
+    "entry": "mkdir"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "ls"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "pwd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "cd ~"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "cd admin"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "ls"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "pwd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "ls"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "clear"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "pwd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "ls"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "cd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "cd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "cd"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "ls"
+  },
+  {
+    "time": "Unknown time",
+    "entry": "mkdir"
+  },
+  {
+    "time": "2025-08-15 11:56:58",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-15 11:57:43",
+    "entry": "192.168.1.1"
+  },
+  {
+    "time": "2025-08-15 11:58:02",
+    "entry": "ping 192.168.1.1"
+  },
+  {
+    "time": "2025-08-24 14:58:44",
+    "entry": "list"
+  },
+  {
+    "time": "2025-08-24 14:58:55",
+    "entry": "afd"
+  },
+  {
+    "time": "2025-08-24 15:54:51",
+    "entry": "ahf"
+  },
+  {
+    "time": "2025-08-24 15:58:10",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-24 16:01:24",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-24 16:01:30",
+    "entry": "find"
+  },
+  {
+    "time": "2025-08-24 16:02:01",
+    "entry": "kahf"
+  }
+]

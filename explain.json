@@ -1,0 +1,9 @@
+{
+    "ls": "Lists directory contents",
+    "-la": "Long format with hidden files",
+    "-lhS": "Long format, human-readable, sorted by size",
+    "find": "Search for files in a directory hierarchy",
+    "-type f": "Only files",
+    "-name": "Filter by filename pattern"
+  }
+  
