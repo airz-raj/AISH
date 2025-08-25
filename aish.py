@@ -11,7 +11,8 @@ import json
 import subprocess
 import time
 import random
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
+from voice_input import setup_voice_input, get_voice_input, is_voice_available, voice_status
 
 from colorama import Fore, Style, init
 
@@ -21,7 +22,48 @@ from animations import display_banner, glitch_animation, impact_animation
 # local helpers & commands
 from utils import resource_path, detect_os, run_subprocess
 import core_commands
+from autocomplete import create_advanced_autocompleter, get_advanced_input
 
+def voice_to_menu_option(voice_text: str) -> Optional[str]:
+    """Convert voice text to menu option number"""
+    voice_text = voice_text.lower().strip()
+    
+    # Direct number match
+    if voice_text in ["1", "2", "3", "4", "5", "6", "7", "8"]:
+        return voice_text
+    
+    # Word to number mapping
+    voice_command_map = {
+        "run": "1", "execute": "1", "command": "1", "launch": "1",
+        "browse": "2", "list": "2", "commands": "2", "explore": "2",
+        "history": "3", "log": "3", "past": "3", "previous": "3",
+        "utilities": "4", "tools": "4", "built-in": "4", "functions": "4",
+        "safety": "5", "check": "5", "secure": "5", "validate": "5",
+        "help": "6", "tips": "6", "guide": "6", "assistance": "6",
+        "exit": "7", "quit": "7", "stop": "7", "close": "7",
+        "voice": "8", "speak": "8", "microphone": "8", "talk": "8"
+    }
+    
+    for word, number in voice_command_map.items():
+        if word in voice_text:
+            return number
+    
+    # Try to extract number from speech
+    number_words = {
+        "one": "1", "two": "2", "three": "3", "four": "4", 
+        "five": "5", "six": "6", "seven": "7", "eight": "8",
+        "first": "1", "second": "2", "third": "3", "fourth": "4",
+        "fifth": "5", "sixth": "6", "seventh": "7", "eighth": "8"
+    }
+    
+    for word, number in number_words.items():
+        if word in voice_text:
+            return number
+    
+    return None
+
+# Global autocompleter instance
+aish_completer = None
 # initialize colorama
 init(autoreset=True)
 
@@ -339,6 +381,32 @@ def show_help_menu():
     print(Fore.LIGHTBLUE_EX + "  clear" + Style.RESET_ALL + " - Clear screen")
     
     print(Fore.CYAN + "\n" + "="*60 + Style.RESET_ALL)
+    
+    
+def voice_listening_animation(duration: float = 3.0):
+    """Animation while listening for voice"""
+    frames = ["🎤   ", "🎤.  ", "🎤.. ", "🎤..."]
+    end_time = time.time() + duration
+    
+    while time.time() < end_time:
+        for frame in frames:
+            if time.time() >= end_time:
+                break
+            print(f"\r{Fore.CYAN}{frame}{Style.RESET_ALL}", end='', flush=True)
+            time.sleep(0.3)
+    print("\r" + " " * 20 + "\r", end='', flush=True)
+
+def voice_processing_animation():
+    """Animation while processing voice"""
+    frames = ["🔍   ", "🔍.  ", "🔍.. ", "🔍..."]
+    for _ in range(2):  # Show for about 2 seconds
+        for frame in frames:
+            print(f"\r{Fore.BLUE}{frame}{Style.RESET_ALL}", end='', flush=True)
+            time.sleep(0.2)
+    print("\r" + " " * 20 + "\r", end='', flush=True)
+    
+
+    
 
 def run_shell_command(cmd: str):
     """
@@ -361,7 +429,23 @@ def run_shell_command(cmd: str):
 # Menu loop
 # ----------------------------
 # Replace the entire main() function with this enhanced version:
+# aish.py
+# Replace the main loop with this improved structure:
+
 def main():
+    global aish_completer
+    # Initialize autocompleter
+    aish_completer = create_advanced_autocompleter(commands_json, patterns_json, core_commands)
+    voice_handler = setup_voice_input()
+    
+    # Show voice status
+    if is_voice_available():
+        print(Fore.CYAN + "🎤 " + voice_status() + Style.RESET_ALL)
+    else:
+        print(Fore.YELLOW + "🔇 " + voice_status() + Style.RESET_ALL)
+        print(Fore.YELLOW + "   Install: pip install SpeechRecognition pyaudio" + Style.RESET_ALL)
+    
+    migrate_history_format()
     # show banner and small start animation
     try:
         display_banner()
@@ -381,107 +465,47 @@ def main():
             print(Fore.YELLOW + "5)" + Style.RESET_ALL + " Safety check command")
             print(Fore.YELLOW + "6)" + Style.RESET_ALL + " Help & tips")
             print(Fore.YELLOW + "7)" + Style.RESET_ALL + " Exit")
+            print(Fore.YELLOW + "8)" + Style.RESET_ALL + " Voice input mode")
 
-            choice = input(Fore.GREEN + "Choose an option (1-7): " + Style.RESET_ALL).strip()
+            choice = get_advanced_input(Fore.GREEN + "Choose an option (1-8): " + Style.RESET_ALL, aish_completer).strip()
 
-            if choice == "1":
-                user_cmd = input("\nEnter command: ").strip()
-                if not user_cmd:
-                    print(Fore.YELLOW + "Please enter a command. Type 'help' for options." + Style.RESET_ALL)
+            # Handle voice input option separately
+            if choice == "8":
+                if not is_voice_available():
+                    print(Fore.RED + "Voice input not available. Install requirements first." + Style.RESET_ALL)
+                    print(Fore.YELLOW + "Run: pip install SpeechRecognition pyaudio" + Style.RESET_ALL)
                     continue
-                resolve_and_run(user_cmd)
-
-            elif choice == "2":
-                groups = grouped_commands(commands_json)
-                for group, cmds in groups.items():
-                    print(Fore.MAGENTA + f"\n{group}:" + Style.RESET_ALL)
-                    for cmd, desc in cmds:
-                        print(Fore.CYAN + f"  {cmd}" + Style.RESET_ALL + (f" – {desc}" if desc else ""))
                 
-                # Show natural language examples
-                print(Fore.MAGENTA + "\n💬 Natural Language Examples:" + Style.RESET_ALL)
-                nl_examples = list(patterns_json.keys())[:5]  # First 5 examples
-                for example in nl_examples:
-                    print(Fore.CYAN + f"  {example}" + Style.RESET_ALL + f" → {patterns_json[example]}")
-
-            elif choice == "3":
-                history_file = resource_path("history.json")
-                altpath = os.path.join(os.path.expanduser("~"), ".aish_history.json")
-                usepath = altpath if (os.path.exists(altpath) and not os.path.exists(history_file)) else history_file
+                print(Fore.CYAN + "\n🎤 Voice Input Mode" + Style.RESET_ALL)
+                print("Say menu options like 'run command', 'browse commands', or 'exit'")
+                print("Or speak natural language commands directly")
                 
-                if os.path.exists(usepath):
-                    try:
-                        with open(usepath, "r", encoding="utf-8") as hf:
-                            hist = json.load(hf)
-                        
-                        if not hist:
-                            print(Fore.YELLOW + "No history yet. Run some commands first!" + Style.RESET_ALL)
-                        else:
-                            print(Fore.MAGENTA + "\n📜 Command History (recent first):" + Style.RESET_ALL)
-                            
-                            # Handle both old format (strings) and new format (dictionaries)
-                            for i, h in enumerate(reversed(hist[-10:]), 1):  # Show last 10
-                                if isinstance(h, dict):
-                                    # New format: dictionary with time and entry
-                                    t = h.get("time", "Unknown time")
-                                    e = h.get("entry", "Unknown command")
-                                else:
-                                    # Old format: simple string
-                                    t = "Unknown time"
-                                    e = str(h)
-                                
-                                print(Fore.CYAN + f"  {i}. {t} — {e}" + Style.RESET_ALL)
-                                
-                    except Exception as e:
-                        print(Fore.RED + f"Error reading history: {e}" + Style.RESET_ALL)
+                voice_text = get_voice_input("What would you like to do?")
+                
+                if voice_text is None:
+                    print("No voice input received or listening timed out")
+                    continue
+                
+                if voice_text.lower() in ['cancel', 'stop', 'quit', 'exit']:
+                    print("Voice input cancelled")
+                    continue
+                
+                # Try to convert to menu option first
+                menu_option = voice_to_menu_option(voice_text)
+                if menu_option and menu_option != "cancel":
+                    print(f"Voice command: '{voice_text}' → Option {menu_option}")
+                    # Process the menu option immediately instead of setting choice
+                    process_menu_option(menu_option)
                 else:
-                    print(Fore.YELLOW + "No history file found. Commands will be saved after you run them." + Style.RESET_ALL)
+                    # Treat as direct command
+                    print(f"Executing voice command: {voice_text}")
+                    resolve_and_run(voice_text)
+                    # Add a small delay to show results before returning to menu
+                    time.sleep(1)
+                continue  # Go back to main menu after processing
 
-            elif choice == "4":
-                print(Fore.MAGENTA + "\n🔧 Built-in Utilities:" + Style.RESET_ALL)
-                for k in sorted(core_commands.COMMAND_REGISTRY.keys()):
-                    doc = core_commands.COMMAND_REGISTRY[k].__doc__ or "No description"
-                    print(Fore.CYAN + f"  {k}" + Style.RESET_ALL + f" – {doc.split('—')[0].strip()}")
-                
-                print(Fore.YELLOW + "\n💡 Usage: Just type the command name in option 1" + Style.RESET_ALL)
-
-            elif choice == "5":
-                try:
-                    import safety
-                    target = input("Enter command to safety check: ").strip()
-                    if not target:
-                        print(Fore.YELLOW + "Please enter a command to check" + Style.RESET_ALL)
-                        continue
-                    
-                    result = safety.check(target)
-                    print(f"\n🔒 Safety Check Results:")
-                    print(f"Command: {result['command']}")
-                    print(f"Status: {result['message']}")
-                    
-                    if result['suggestions']:
-                        print(f"\n💡 Suggestions:")
-                        for i, suggestion in enumerate(result['suggestions'], 1):
-                            print(f"  {i}. {suggestion}")
-                    
-                    if result['safe']:
-                        print(Fore.GREEN + "\n✅ This command appears safe" + Style.RESET_ALL)
-                    else:
-                        print(Fore.RED + "\n❌ WARNING: This command is dangerous!" + Style.RESET_ALL)
-                        
-                except Exception as e:
-                    print(Fore.RED + f"Safety check error: {e}" + Style.RESET_ALL)
-                    print(Fore.YELLOW + "Make sure safety.py is in the same directory" + Style.RESET_ALL)
-
-            elif choice == "6":
-                show_help_menu()
-
-            elif choice == "7":
-                exit_animation()
-                break
-
-            else:
-                print(Fore.RED + "Invalid option! Please choose 1-7." + Style.RESET_ALL)
-                print(Fore.YELLOW + "💡 Tip: Type the number only (e.g., '1' for Run command)" + Style.RESET_ALL)
+            # Process regular menu choices
+            process_menu_option(choice)
 
         except KeyboardInterrupt:
             print(Fore.YELLOW + "\n\nUse option 7 or type 'exit' to quit properly." + Style.RESET_ALL)
@@ -490,6 +514,124 @@ def main():
             print(Fore.RED + f"Unexpected error: {e}" + Style.RESET_ALL)
             print(Fore.YELLOW + "The program will continue running..." + Style.RESET_ALL)
             continue
+
+# ADD THIS NEW FUNCTION to handle menu options:
+def process_menu_option(choice: str):
+    """Process menu selection and execute the corresponding action"""
+    if choice == "1":
+        print(Fore.CYAN + "Press 'v' for voice input or type your command" + Style.RESET_ALL)
+        user_input = get_advanced_input("\nEnter command (or 'v' for voice): ", aish_completer).strip()
+        
+        if user_input.lower() == 'v':
+            if not is_voice_available():
+                print(Fore.RED + "Voice input not available" + Style.RESET_ALL)
+                return
+                
+            voice_text = get_voice_input("Speak your command")
+            if voice_text and voice_text.lower() != 'cancel':
+                user_input = voice_text
+                print(f"Voice command: {user_input}")
+        
+        if not user_input:
+            print(Fore.YELLOW + "Please enter a command. Type 'help' for options." + Style.RESET_ALL)
+            return
+        
+        resolve_and_run(user_input)
+
+    elif choice == "2":
+        groups = grouped_commands(commands_json)
+        for group, cmds in groups.items():
+            print(Fore.MAGENTA + f"\n{group}:" + Style.RESET_ALL)
+            for cmd, desc in cmds:
+                print(Fore.CYAN + f"  {cmd}" + Style.RESET_ALL + (f" – {desc}" if desc else ""))
+        
+        # Show natural language examples
+        print(Fore.MAGENTA + "\n💬 Natural Language Examples:" + Style.RESET_ALL)
+        nl_examples = list(patterns_json.keys())[:5]  # First 5 examples
+        for example in nl_examples:
+            print(Fore.CYAN + f"  {example}" + Style.RESET_ALL + f" → {patterns_json[example]}")
+
+    elif choice == "3":
+        # VIEW COMMAND HISTORY
+        history_file = resource_path("history.json")
+        altpath = os.path.join(os.path.expanduser("~"), ".aish_history.json")
+        usepath = altpath if (os.path.exists(altpath) and not os.path.exists(history_file)) else history_file
+        
+        if os.path.exists(usepath):
+            try:
+                with open(usepath, "r", encoding="utf-8") as hf:
+                    hist = json.load(hf)
+                
+                if not hist:
+                    print(Fore.YELLOW + "No history yet. Run some commands first!" + Style.RESET_ALL)
+                else:
+                    print(Fore.MAGENTA + "\n📜 Command History (recent first):" + Style.RESET_ALL)
+                    
+                    # Handle both old format (strings) and new format (dictionaries)
+                    for i, h in enumerate(reversed(hist[-10:]), 1):  # Show last 10
+                        if isinstance(h, dict):
+                            # New format: dictionary with time and entry
+                            t = h.get("time", "Unknown time")
+                            e = h.get("entry", "Unknown command")
+                        else:
+                            # Old format: simple string
+                            t = "Unknown time"
+                            e = str(h)
+                        
+                        print(Fore.CYAN + f"  {i}. {t} — {e}" + Style.RESET_ALL)
+                        
+            except Exception as e:
+                print(Fore.RED + f"Error reading history: {e}" + Style.RESET_ALL)
+        else:
+            print(Fore.YELLOW + "No history file found. Commands will be saved after you run them." + Style.RESET_ALL)
+
+    elif choice == "4":
+        print(Fore.MAGENTA + "\n🔧 Built-in Utilities:" + Style.RESET_ALL)
+        for k in sorted(core_commands.COMMAND_REGISTRY.keys()):
+            doc = core_commands.COMMAND_REGISTRY[k].__doc__ or "No description"
+            print(Fore.CYAN + f"  {k}" + Style.RESET_ALL + f" – {doc.split('—')[0].strip()}")
+        
+        print(Fore.YELLOW + "\n💡 Usage: Just type the command name in option 1" + Style.RESET_ALL)
+
+    elif choice == "5":
+        try:
+            import safety
+            target = get_advanced_input("Enter command to safety check: ", aish_completer).strip()
+            if not target:
+                print(Fore.YELLOW + "Please enter a command to check" + Style.RESET_ALL)
+                return
+            
+            result = safety.check(target)
+            print(f"\n🔒 Safety Check Results:")
+            print(f"Command: {result['command']}")
+            print(f"Status: {result['message']}")
+            
+            if result['suggestions']:
+                print(f"\n💡 Suggestions:")
+                for i, suggestion in enumerate(result['suggestions'], 1):
+                    print(f"  {i}. {suggestion}")
+            
+            if result['safe']:
+                print(Fore.GREEN + "\n✅ This command appears safe" + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "\n❌ WARNING: This command is dangerous!" + Style.RESET_ALL)
+                
+        except Exception as e:
+            print(Fore.RED + f"Safety check error: {e}" + Style.RESET_ALL)
+            print(Fore.YELLOW + "Make sure safety.py is in the same directory" + Style.RESET_ALL)
+
+    elif choice == "6":
+        show_help_menu()
+
+    elif choice == "7":
+        exit_animation()
+        exit(0)  # Exit the program completely
+
+    else:
+        print(Fore.RED + "Invalid option! Please choose 1-8." + Style.RESET_ALL)
+        print(Fore.YELLOW + "💡 Tip: Type the number only (e.g., '1' for Run command)" + Style.RESET_ALL)
+
+
 def migrate_history_format():
     """Convert old history format to new format"""
     try:
