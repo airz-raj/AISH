@@ -14,7 +14,17 @@ import re
 import platform
 from datetime import datetime
 from typing import List, Optional
-
+try:
+    from colorama import Fore, Style
+except ImportError:
+    # Fallback for systems without colorama
+    class Fore:
+        GREEN = ''
+        RED = ''
+        RESET = ''
+    class Style:
+        RESET_ALL = ''
+from utils import resource_path
 try:
     import psutil
 except Exception:
@@ -280,10 +290,133 @@ def formatjson_cmd(args: List[str]):
         print(json.dumps(data, indent=4, ensure_ascii=False))
     except Exception as e:
         print("Invalid JSON or error:", e)
+        
+# core_commands.py - Add this new command:
 
-# -------------------------
-# Registry
-# -------------------------
+# core_commands.py - Update history_cmd to read from the enhanced history file:
+
+# core_commands.py - Replace the history_cmd function with this improved version:
+
+# core_commands.py - Update history_cmd to handle empty history better:
+
+def history_cmd(args: List[str] = None):
+    """history — show color-coded enhanced command history in a nice table format"""
+    try:
+        # Read from the enhanced history file
+        enhanced_history_path = os.path.join(os.path.expanduser("~"), ".aish_command_history.json")
+        
+        if not os.path.exists(enhanced_history_path):
+            print("📝 No enhanced command history found yet")
+            print("   Run some commands first to build history")
+            print(f"   History will be saved to: {enhanced_history_path}")
+            return
+        
+        with open(enhanced_history_path, "r", encoding="utf-8") as f:
+            hist = json.load(f)
+        
+        if not hist:
+            print("📝 No enhanced command history yet")
+            print("   Run some commands first to build history")
+            return
+        
+        # Show most recent first
+        hist.reverse()
+        
+        # Calculate column widths
+        max_command_len = 40
+        max_output_len = 50
+        
+        # Print table header
+        print(f"{Fore.CYAN}{'Time':<20} {'Status':<8} {'Command':<40} {'Output Snippet'}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{'='*20} {'='*8} {'='*40} {'='*50}{Style.RESET_ALL}")
+        
+        for entry in hist:
+            time_str = entry.get("time", "Unknown")
+            command = entry.get("entry", "Unknown")
+            exit_code = entry.get("exit_code", 0)
+            output = entry.get("output_snippet", "")
+            
+            # Trim long commands for display
+            display_command = command
+            if len(display_command) > max_command_len:
+                display_command = display_command[:max_command_len-3] + "..."
+            else:
+                display_command = display_command.ljust(max_command_len)
+            
+            # Color code based on exit status
+            if exit_code == 0:
+                status_color = Fore.GREEN
+                status = "✓"
+            else:
+                status_color = Fore.RED
+                status = "✗"
+            
+            # Trim and clean output for display
+            display_output = output
+            if display_output:
+                # Remove extra whitespace and newlines
+                display_output = ' '.join(display_output.split())
+                if len(display_output) > max_output_len:
+                    display_output = display_output[:max_output_len-3] + "..."
+            else:
+                display_output = "(no output)"
+            
+            print(f"{time_str:<20} {status_color}{status:<8}{Style.RESET_ALL} {display_command:<40} {display_output}")
+            
+        print(f"{Fore.CYAN}{'='*20} {'='*8} {'='*40} {'='*50}{Style.RESET_ALL}")
+        print(f"Total commands: {len(hist)}")
+            
+    except Exception as e:
+        print(f"❌ Error reading enhanced history: {e}")
+        print(f"💡 Try deleting the file and running commands again")
+        
+# core_commands.py - Add this function to view raw JSON:
+
+def view_history_file_cmd(args: List[str] = None):
+    """viewhistoryfile — show the raw JSON content of the enhanced history file"""
+    try:
+        enhanced_history_path = os.path.join(os.path.expanduser("~"), ".aish_command_history.json")
+        
+        if not os.path.exists(enhanced_history_path):
+            print("No enhanced history file found yet")
+            return
+        
+        with open(enhanced_history_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        # Pretty-print the JSON
+        try:
+            parsed_json = json.loads(content)
+            print(json.dumps(parsed_json, indent=2))
+        except:
+            # If JSON is invalid, show raw content
+            print(content)
+            
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        
+# core_commands.py - Add this function:
+
+def open_history_file_cmd(args: List[str] = None):
+    """openhistory — open the enhanced history file in default editor"""
+    enhanced_history_path = os.path.join(os.path.expanduser("~"), ".aish_command_history.json")
+    
+    if not os.path.exists(enhanced_history_path):
+        print("No enhanced history file found yet")
+        return
+    
+    try:
+        if detect_os() == "windows":
+            os.system(f'start "" "{enhanced_history_path}"')
+        elif detect_os() == "darwin":  # macOS
+            os.system(f'open "{enhanced_history_path}"')
+        else:  # Linux
+            os.system(f'xdg-open "{enhanced_history_path}"')
+        print(f"Opened enhanced history file: {enhanced_history_path}")
+    except Exception as e:
+        print(f"Error opening file: {e}")
+
+
 COMMAND_REGISTRY = {
     "sysinfo": sysinfo,
     "battery": battery,
@@ -297,5 +430,8 @@ COMMAND_REGISTRY = {
     "ps": ps_cmd,
     "kill": kill_cmd,
     "wc": wc_cmd,
-    "formatjson": formatjson_cmd
+    "formatjson": formatjson_cmd,
+    "history": history_cmd,          # Formatted table view
+    "viewhistoryfile": view_history_file_cmd,  # Raw JSON view
+    "historyjson": view_history_file_cmd,# ADD THIS LINE
 }

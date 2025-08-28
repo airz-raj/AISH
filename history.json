@@ -122,5 +122,281 @@
   {
     "time": "2025-08-25 14:06:47",
     "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 20:40:18",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 20:56:45",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 20:58:38",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 21:03:21",
+    "entry": "exit"
+  },
+  {
+    "time": "2025-08-25 21:05:04",
+    "entry": "exit"
+  },
+  {
+    "time": "2025-08-25 21:12:42",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 21:14:00",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 21:14:05",
+    "entry": "yo"
+  },
+  {
+    "time": "2025-08-25 21:14:10",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-25 21:33:35",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 21:36:21",
+    "entry": "hello"
+  },
+  {
+    "time": "2025-08-25 21:38:37",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-25 21:38:58",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 16:31:37",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 16:31:46",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-26 16:51:12",
+    "entry": "install"
+  },
+  {
+    "time": "2025-08-26 16:51:23",
+    "entry": "battery status"
+  },
+  {
+    "time": "2025-08-26 16:51:30",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-26 16:51:38",
+    "entry": "wc"
+  },
+  {
+    "time": "2025-08-26 16:52:03",
+    "entry": "ping google.com"
+  },
+  {
+    "time": "2025-08-26 17:36:24",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 17:51:25",
+    "entry": "list processes"
+  },
+  {
+    "time": "2025-08-26 17:51:31",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 17:53:05",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 17:53:17",
+    "entry": "clear the screen"
+  },
+  {
+    "time": "2025-08-26 17:53:23",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-26 17:53:29",
+    "entry": "list all files in detail"
+  },
+  {
+    "time": "2025-08-26 17:53:46",
+    "entry": "what's my path"
+  },
+  {
+    "time": "2025-08-26 17:53:55",
+    "entry": "pwd"
+  },
+  {
+    "time": "2025-08-26 17:56:07",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 17:56:11",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-26 17:58:20",
+    "entry": "show my files"
+  },
+  {
+    "time": "2025-08-26 17:58:37",
+    "entry": "make a directory"
+  },
+  {
+    "time": "2025-08-26 17:58:54",
+    "entry": "system info"
+  },
+  {
+    "time": "2025-08-26 18:01:57",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 18:04:25",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-26 18:06:51",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-26 18:07:03",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-27 20:07:43",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-27 20:08:21",
+    "entry": "show file content"
+  },
+  {
+    "time": "2025-08-27 20:10:20",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-27 20:12:50",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-27 20:12:59",
+    "entry": "show them by size"
+  },
+  {
+    "time": "2025-08-27 20:40:32",
+    "entry": "find a file",
+    "exit_code": 1,
+    "output_snippet": "find: -name: requires additional arguments\n"
+  },
+  {
+    "time": "2025-08-27 20:40:49",
+    "entry": "find -aish.py",
+    "exit_code": 0,
+    "output_snippet": ""
+  },
+  {
+    "time": "2025-08-27 20:40:56",
+    "entry": "list all files",
+    "exit_code": 0,
+    "output_snippet": "README.md\n__pycache__\naish.py\nanimations.py\nautocomplete.py\ncommands.json\ncontext.py\ncore_commands.py\nexecutor.py\nexplain.json\nexplain.py\nhistory.json\nparser.py\npatterns.json\nrequirements.txt\nsafety.p"
+  },
+  {
+    "time": "2025-08-27 20:45:23",
+    "entry": "ls -i",
+    "exit_code": 0,
+    "output_snippet": "22769880 README.md\n22769886 __pycache__\n22769868 aish.py\n22769869 animations.py\n22769870 autocomplete.py\n22769871 commands.json\n22769872 context.py\n22769873 core_commands.py\n22769874 executor.py\n22769"
+  },
+  {
+    "time": "2025-08-27 20:53:25",
+    "entry": "show files"
+  },
+  {
+    "time": "2025-08-27 20:53:37",
+    "entry": "pwd"
+  },
+  {
+    "time": "2025-08-27 20:53:41",
+    "entry": "where am i"
+  },
+  {
+    "time": "2025-08-27 20:53:49",
+    "entry": "ifconfig"
+  },
+  {
+    "time": "2025-08-27 21:32:13",
+    "entry": "show my files"
+  },
+  {
+    "time": "2025-08-27 21:32:19",
+    "entry": "disk usage"
+  },
+  {
+    "time": "2025-08-27 21:32:23",
+    "entry": "battery status"
+  },
+  {
+    "time": "2025-08-27 21:33:14",
+    "entry": "cacel"
+  },
+  {
+    "time": "2025-08-27 21:35:17",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-27 21:35:22",
+    "entry": "show my files"
+  },
+  {
+    "time": "2025-08-27 21:35:25",
+    "entry": "show hidden files"
+  },
+  {
+    "time": "2025-08-27 21:35:33",
+    "entry": "cacel"
+  },
+  {
+    "time": "2025-08-27 21:36:05",
+    "entry": "history"
+  },
+  {
+    "time": "2025-08-27 21:39:21",
+    "entry": "history"
+  },
+  {
+    "time": "2025-08-27 21:41:12",
+    "entry": "sysinfo"
+  },
+  {
+    "time": "2025-08-27 21:41:14",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-27 21:41:17",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-27 21:41:21",
+    "entry": "ls -i"
+  },
+  {
+    "time": "2025-08-27 21:41:30",
+    "entry": "cacel"
+  },
+  {
+    "time": "2025-08-27 21:41:56",
+    "entry": "history"
   }
 ]

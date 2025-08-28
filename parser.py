@@ -13,7 +13,6 @@ def load_json(path: str):
     with open(resource_path(path), 'r', encoding='utf-8') as f:
         return json.load(f)
 
-# Add this function to parser.py
 def get_parsing_suggestions(user_input: str, patterns_json: dict, commands_json: dict) -> List[str]:
     """Get suggestions for parsing errors"""
     suggestions = []
@@ -37,18 +36,16 @@ def get_parsing_suggestions(user_input: str, patterns_json: dict, commands_json:
     
     return suggestions
 
-# parser returns either:
-#  - ("builtin", func, args:list)
-#  - ("shell", command_string)
-#  - None
 def parse_command(user_input: str, commands_json: dict, patterns_json: dict, current_os: str):
     ui = normalize(user_input)
     if ui == "":
         return None
 
-    # 1. Patterns: exact match
-    if ui in patterns_json:
-        key = patterns_json[ui]
+    # 1. FIRST check patterns: exact match (this should be the first check)
+    # Convert patterns to lowercase for case-insensitive matching
+    ui_lower = ui.lower()
+    if ui_lower in patterns_json:
+        key = patterns_json[ui_lower]
         # If pattern maps to builtin
         if key in COMMAND_REGISTRY:
             return ("builtin", COMMAND_REGISTRY[key], [])
@@ -59,14 +56,14 @@ def parse_command(user_input: str, commands_json: dict, patterns_json: dict, cur
 
     # 2. If the exact first token matches a builtin or command key or pattern
     parts = ui.split()
-    head = parts[0]
-    tail = parts[1:]
+    head = parts[0].lower() if parts else ""
+    tail = parts[1:] if len(parts) > 1 else []
 
     # builtin exact
     if head in COMMAND_REGISTRY:
         return ("builtin", COMMAND_REGISTRY[head], tail)
 
-    # pattern head exact
+    # pattern head exact (check if first word matches any pattern)
     if head in patterns_json:
         mapped = patterns_json[head]
         if mapped in COMMAND_REGISTRY:
@@ -83,7 +80,7 @@ def parse_command(user_input: str, commands_json: dict, patterns_json: dict, cur
         return ("shell", full)
 
     # 3. fuzzy match for patterns then commands
-    cand = get_close_matches(ui, patterns_json.keys(), n=1, cutoff=0.8)
+    cand = get_close_matches(ui_lower, patterns_json.keys(), n=1, cutoff=0.6)  # Lower cutoff for better matching
     if cand:
         key = patterns_json[cand[0]]
         if key in COMMAND_REGISTRY:
@@ -92,7 +89,7 @@ def parse_command(user_input: str, commands_json: dict, patterns_json: dict, cur
             cmd = commands_json[key].get(current_os, commands_json[key].get("linux"))
             return ("shell", cmd)
 
-    cand_cmd = get_close_matches(head, commands_json.keys(), n=1, cutoff=0.8)
+    cand_cmd = get_close_matches(head, commands_json.keys(), n=1, cutoff=0.6)
     if cand_cmd:
         base = commands_json[cand_cmd[0]].get(current_os, commands_json[cand_cmd[0]].get("linux"))
         full = f"{base} {' '.join(tail)}".strip()

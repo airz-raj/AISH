@@ -19,6 +19,8 @@ def resource_path(relative_path: str) -> str:
 def detect_os() -> str:
     return platform.system().lower()
 
+# utils.py - Make sure run_subprocess returns all three values:
+
 def run_subprocess(cmd: str, cwd: str = None, capture_output: bool = True) -> Tuple[int, str, str]:
     """
     Run a shell command and return (returncode, stdout, stderr).

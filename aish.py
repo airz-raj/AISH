@@ -5,7 +5,6 @@ AISH — integrated main program (UI/UX from animations.py + built-in useful com
 Keeps the menu-driven UI and animations, but will run builtin functions from core_commands
 or fall back to shell commands resolved via commands.json (OS-aware).
 """
-
 import os
 import json
 import subprocess
@@ -13,12 +12,12 @@ import time
 import random
 from typing import Dict, Any, List, Optional
 from voice_input import setup_voice_input, get_voice_input, is_voice_available, voice_status
-
+from parser import parse_command 
 from colorama import Fore, Style, init
 
 # import animations (from the files your friend provided)
 from animations import display_banner, glitch_animation, impact_animation
-
+import sys
 # local helpers & commands
 from utils import resource_path, detect_os, run_subprocess
 import core_commands
@@ -137,28 +136,61 @@ def exit_animation():
 # ----------------------------
 # history helpers
 # ----------------------------
-def append_history(entry: str):
+# aish.py - Replace the append_history function with this enhanced version:
+
+# aish.py - Modify the append_history function to use a different file:
+
+def append_history(entry: str, exit_code: int = 0, output_snippet: str = ""):
+    """Save command to enhanced history with exit code and output snippet"""
+    try:
+        # Use a different file for enhanced history
+        enhanced_history_path = os.path.join(os.path.expanduser("~"), ".aish_command_history.json")
+        
+        hist = []
+        if os.path.exists(enhanced_history_path):
+            try:
+                with open(enhanced_history_path, "r", encoding="utf-8") as f:
+                    hist = json.load(f)
+            except Exception:
+                hist = []
+        
+        # Add new entry with enhanced information
+        hist.append({
+            "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "entry": entry,
+            "exit_code": exit_code,
+            "output_snippet": output_snippet[:200]  # Limit to first 200 chars
+        })
+        
+        # Keep only last 100 entries to prevent file from growing too large
+        if len(hist) > 100:
+            hist = hist[-100:]
+        
+        with open(enhanced_history_path, "w", encoding="utf-8") as f:
+            json.dump(hist, f, indent=2)
+            
+    except Exception as e:
+        # Silent fail for history writing errors
+        pass
+
+# Keep the original basic history saving for option 3
+def append_basic_history(entry: str):
+    """Save basic command history for shell display (option 3)"""
     try:
         path = resource_path("history.json")
-        # if resource_path returned a temp _MEIPASS path when packaged, write history next to exe instead
-        if hasattr(__import__("sys"), "_MEIPASS"):
-            # packaged: write to user folder instead
+        if hasattr(sys, "_MEIPASS"):
             path = os.path.join(os.path.expanduser("~"), ".aish_history.json")
         
         hist = []
         if os.path.exists(path):
             try:
                 with open(path, "r", encoding="utf-8") as f:
-                    loaded_data = json.load(f)
-                    # Handle both old (list of strings) and new (list of dicts) formats
-                    if isinstance(loaded_data, list):
-                        hist = loaded_data
+                    hist = json.load(f)
             except Exception:
                 hist = []
         
         # Convert any old string entries to new format when adding new ones
         if hist and isinstance(hist[0], str):
-            # Convert old format to new format
             converted_hist = []
             for item in hist:
                 if isinstance(item, str):
@@ -261,6 +293,15 @@ def show_suggestions(user_input):
         print(Fore.LIGHTBLUE_EX + f"  • {tip}" + Style.RESET_ALL)
 
 # Replace the resolve_and_run function with this enhanced version:
+# aish.py
+# Replace the resolve_and_run function with this improved version:
+
+# aish.py - Update the resolve_and_run function:
+
+# aish.py - Update resolve_and_run to call both history functions:
+
+# aish.py - Update the resolve_and_run function to handle built-in commands properly:
+
 def resolve_and_run(raw_input: str):
     s = raw_input.strip()
     if not s:
@@ -268,89 +309,113 @@ def resolve_and_run(raw_input: str):
         print(Fore.YELLOW + "Please enter a command" + Style.RESET_ALL)
         return
 
-    # Handle help command
+    # Handle built-in AISH commands first
     if s.lower() in ['help', '?', 'menu']:
         show_help_menu()
         return
 
-    # Handle clear screen
     if s.lower() in ['clear', 'cls']:
         os.system("cls" if OS_NAME == "windows" else "clear")
+        append_basic_history(s)
+        append_history(s, 0, "Screen cleared")
         return
 
-    # quick pattern match (exact)
-    key = None
-    lowered = s.lower()
-    if lowered in patterns_json:
-        key = patterns_json[lowered]
-
-    # if a pattern maps to a builtin command name present in core_commands registry
-    if key and key in core_commands.COMMAND_REGISTRY:
-        func = core_commands.COMMAND_REGISTRY[key]
+    # Check if it's a built-in command before parsing
+    if s.lower() in core_commands.COMMAND_REGISTRY:
+        # Handle built-in commands directly
+        func = core_commands.COMMAND_REGISTRY[s.lower()]
         try:
             processing_animation()
-            func([])
+            # Capture output for built-in commands
+            import io
+            import contextlib
+            output_capture = io.StringIO()
+            with contextlib.redirect_stdout(output_capture):
+                func([])  # Pass empty args for commands like 'history'
+            output = output_capture.getvalue()
             success_animation()
-            append_history(s)
+            print(output)  # Show the command output
+            append_basic_history(s)
+            append_history(s, 0, output[:200])
             return
         except Exception as e:
             blast_animation()
             print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
-            show_suggestions(s)
+            append_basic_history(s)
+            append_history(s, 1, f"Error: {str(e)[:200]}")
             return
 
-    # direct builtin (first token)
-    tokens = s.split()
-    head = tokens[0].lower()
-    tail = tokens[1:]
-    if head in core_commands.COMMAND_REGISTRY:
-        func = core_commands.COMMAND_REGISTRY[head]
-        try:
-            processing_animation()
-            func(tail)
-            success_animation()
-            append_history(s)
-            return
-        except Exception as e:
-            blast_animation()
-            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
-            show_suggestions(s)
-            return
-
-    # if head matches commands.json keys (shell mapping), build os-aware command
-    if head in commands_json:
-        entry = commands_json[head]
-        cmd_template = entry.get(OS_NAME) if isinstance(entry, dict) else entry
-        if not cmd_template and isinstance(entry, dict):
-            cmd_template = entry.get("linux") or ""
-        cmd_to_run = f"{cmd_template} {' '.join(tail)}".strip()
-        try:
-            processing_animation()
-            run_shell_command(cmd_to_run)
-            success_animation()
-            append_history(s)
-            return
-        except Exception as e:
-            blast_animation()
-            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
-            show_suggestions(s)
-            return
-
-    # fallback: treat entire input as shell passthrough
-    try:
-        processing_animation()
-        result = run_shell_command(s)
-        if result != 0:  # Command failed
-            show_suggestions(s)
-        else:
-            success_animation()
-        append_history(s)
-    except Exception as e:
+    # Use the parser to parse other commands
+    parsed = parse_command(s, commands_json, patterns_json, OS_NAME)
+    
+    if not parsed:
         blast_animation()
-        print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
+        print(Fore.YELLOW + "Could not parse command" + Style.RESET_ALL)
         show_suggestions(s)
+        append_basic_history(s)
+        append_history(s, 1, "Parse error")
+        return
 
-# Add this helper function for help menu
+    kind = parsed[0]
+    exit_code = 0
+    output_snippet = ""
+
+    if kind == "builtin":
+        func = parsed[1]
+        args = parsed[2] if len(parsed) > 2 else []
+        try:
+            processing_animation()
+            # Capture builtin command output
+            import io
+            import contextlib
+            output_capture = io.StringIO()
+            with contextlib.redirect_stdout(output_capture):
+                func(args)
+            output = output_capture.getvalue()
+            success_animation()
+            output_snippet = output[:200]
+            append_basic_history(s)
+            append_history(s, exit_code, output_snippet)
+            return
+        except Exception as e:
+            blast_animation()
+            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
+            show_suggestions(s)
+            append_basic_history(s)
+            append_history(s, 1, f"Error: {str(e)[:200]}")
+            return
+
+    elif kind == "shell":
+        cmd_to_run = parsed[1]
+        try:
+            processing_animation()
+            # Run command and capture output
+            result, stdout, stderr = run_subprocess(cmd_to_run, capture_output=True)
+            exit_code = result
+            
+            if stdout:
+                print(stdout)
+                output_snippet = stdout[:200]
+            if stderr:
+                print(Fore.RED + stderr + Style.RESET_ALL)
+                if not output_snippet:
+                    output_snippet = stderr[:200]
+            
+            if exit_code == 0:
+                success_animation()
+            else:
+                blast_animation()
+                show_suggestions(s)
+            
+            append_basic_history(s)
+            append_history(s, exit_code, output_snippet)
+            
+        except Exception as e:
+            blast_animation()
+            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
+            show_suggestions(s)
+            append_basic_history(s)
+            append_history(s, 1, f"Error: {str(e)[:200]}")
 def show_help_menu():
     """Show comprehensive help menu"""
     print(Fore.CYAN + "\n" + "="*60 + Style.RESET_ALL)
@@ -519,24 +584,52 @@ def main():
 def process_menu_option(choice: str):
     """Process menu selection and execute the corresponding action"""
     if choice == "1":
-        print(Fore.CYAN + "Press 'v' for voice input or type your command" + Style.RESET_ALL)
-        user_input = get_advanced_input("\nEnter command (or 'v' for voice): ", aish_completer).strip()
+        print(Fore.CYAN + "Interactive Mode (type 'exit' to return to menu)" + Style.RESET_ALL)
+
         
-        if user_input.lower() == 'v':
-            if not is_voice_available():
-                print(Fore.RED + "Voice input not available" + Style.RESET_ALL)
-                return
+        while True:
+            print(Fore.CYAN + "Press 'v' for voice input or type your command" + Style.RESET_ALL)
+            user_input = get_advanced_input("\naish> ", aish_completer).strip()
+            if user_input.lower() == 'v':
+                if not is_voice_available():
+                    print(Fore.RED + "Voice input not available" + Style.RESET_ALL)
+                    return
                 
-            voice_text = get_voice_input("Speak your command")
-            if voice_text and voice_text.lower() != 'cancel':
+                voice_text = get_voice_input("Speak your command")
+                if voice_text and voice_text.lower() != 'cancel':
+                    user_input = voice_text
+                    print(f"Voice command: {user_input}")
+
+        # Exit conditions
+            if user_input.lower() in ["exit", "quit", "back", "menu"]:
+                print(Fore.YELLOW + "Exiting interactive mode..." + Style.RESET_ALL)
+                break
+
+        # Voice input option
+            if user_input.lower() == 'v':
+                if not is_voice_available():
+                    print(Fore.RED + "Voice input not available" + Style.RESET_ALL)
+                    continue
+                voice_text = get_voice_input("Speak your command")
+                if not voice_text or voice_text.lower() in ['cancel', 'exit', 'quit']:
+                    continue
                 user_input = voice_text
                 print(f"Voice command: {user_input}")
-        
-        if not user_input:
-            print(Fore.YELLOW + "Please enter a command. Type 'help' for options." + Style.RESET_ALL)
-            return
-        
-        resolve_and_run(user_input)
+
+        # Skip empty input
+            if not user_input:
+                print(Fore.YELLOW + "Please enter a command. Type 'help' for options." + Style.RESET_ALL)
+                continue
+
+        # 🔥 Run through the same pipeline as before
+            try:
+            # parse
+                resolve_and_run(user_input)
+            
+            except Exception as e:
+                print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
+
+
 
     elif choice == "2":
         groups = grouped_commands(commands_json)
