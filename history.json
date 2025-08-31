@@ -398,5 +398,365 @@
   {
     "time": "2025-08-27 21:41:56",
     "entry": "history"
+  },
+  {
+    "time": "2025-08-28 19:19:41",
+    "entry": "2"
+  },
+  {
+    "time": "2025-08-28 19:30:48",
+    "entry": "mujhe fir bhi"
+  },
+  {
+    "time": "2025-08-28 19:30:56",
+    "entry": "history"
+  },
+  {
+    "time": "2025-08-28 19:31:00",
+    "entry": "viewhistoryfile"
+  },
+  {
+    "time": "2025-08-28 19:31:23",
+    "entry": "where am i"
+  },
+  {
+    "time": "2025-08-28 20:02:18",
+    "entry": "macro create d_s"
+  },
+  {
+    "time": "2025-08-28 20:02:40",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 20:02:43",
+    "entry": "ls"
+  },
+  {
+    "time": "2025-08-28 20:02:49",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-28 20:02:56",
+    "entry": "marco run d_s"
+  },
+  {
+    "time": "2025-08-28 20:03:01",
+    "entry": "clear"
+  },
+  {
+    "time": "2025-08-28 20:03:34",
+    "entry": "macro create"
+  },
+  {
+    "time": "2025-08-28 20:03:47",
+    "entry": "macro create daily_setup"
+  },
+  {
+    "time": "2025-08-28 20:03:54",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 20:04:10",
+    "entry": "cat ~/.aish_macros.json"
+  },
+  {
+    "time": "2025-08-28 20:04:57",
+    "entry": "create macro called project_backup"
+  },
+  {
+    "time": "2025-08-28 20:05:28",
+    "entry": "create macro"
+  },
+  {
+    "time": "2025-08-28 20:05:36",
+    "entry": "create macro akl"
+  },
+  {
+    "time": "2025-08-28 20:05:41",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 20:16:07",
+    "entry": "macro create try1"
+  },
+  {
+    "time": "2025-08-28 20:16:19",
+    "entry": "create macro try1"
+  },
+  {
+    "time": "2025-08-28 20:16:59",
+    "entry": "create macro daily_setup"
+  },
+  {
+    "time": "2025-08-28 20:20:20",
+    "entry": "create macro tyis"
+  },
+  {
+    "time": "2025-08-28 20:21:24",
+    "entry": "macro_create tryis"
+  },
+  {
+    "time": "2025-08-28 20:26:37",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 20:26:37",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-28 20:26:37",
+    "entry": "sysinfo"
+  },
+  {
+    "time": "2025-08-28 20:26:37",
+    "entry": "macro_run tryis"
+  },
+  {
+    "time": "2025-08-28 20:38:28",
+    "entry": "create macro ret"
+  },
+  {
+    "time": "2025-08-28 20:40:45",
+    "entry": "create macro ret"
+  },
+  {
+    "time": "2025-08-28 20:40:55",
+    "entry": "ls -ls"
+  },
+  {
+    "time": "2025-08-28 20:40:56",
+    "entry": "mkdir"
+  },
+  {
+    "time": "2025-08-28 20:40:58",
+    "entry": "pwd"
+  },
+  {
+    "time": "2025-08-28 20:40:58",
+    "entry": "macro_run ret"
+  },
+  {
+    "time": "2025-08-28 20:42:19",
+    "entry": "cat ~/.aish_macros.json"
+  },
+  {
+    "time": "2025-08-28 20:46:22",
+    "entry": "macro_debug"
+  },
+  {
+    "time": "2025-08-28 20:46:36",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 20:46:36",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-28 20:46:37",
+    "entry": "sysinfo"
+  },
+  {
+    "time": "2025-08-28 20:46:37",
+    "entry": "macro_run tryis"
+  },
+  {
+    "time": "2025-08-28 21:07:31",
+    "entry": "macros_run tryis"
+  },
+  {
+    "time": "2025-08-28 21:09:08",
+    "entry": "macro_debug tryis"
+  },
+  {
+    "time": "2025-08-28 21:09:24",
+    "entry": "ls -ls"
+  },
+  {
+    "time": "2025-08-28 21:09:25",
+    "entry": "mkdir"
+  },
+  {
+    "time": "2025-08-28 21:09:26",
+    "entry": "pwd"
+  },
+  {
+    "time": "2025-08-28 21:09:26",
+    "entry": "macro_run ret"
+  },
+  {
+    "time": "2025-08-28 21:10:14",
+    "entry": "ls -la"
+  },
+  {
+    "time": "2025-08-28 21:10:14",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-28 21:10:14",
+    "entry": "sysinfo"
+  },
+  {
+    "time": "2025-08-28 21:10:14",
+    "entry": "macro_run tryis"
+  },
+  {
+    "time": "2025-08-28 21:55:35",
+    "entry": "macro_run ytr"
+  },
+  {
+    "time": "2025-08-28 21:56:06",
+    "entry": "macro_create ytr"
+  },
+  {
+    "time": "2025-08-28 21:56:30",
+    "entry": "macro_debug ytr"
+  },
+  {
+    "time": "2025-08-28 21:56:39",
+    "entry": "macro_run ytr"
+  },
+  {
+    "time": "2025-08-28 21:58:40",
+    "entry": "creat macros qw"
+  },
+  {
+    "time": "2025-08-28 21:59:11",
+    "entry": "create macro qw"
+  },
+  {
+    "time": "2025-08-28 21:59:24",
+    "entry": "macro_run qw"
+  },
+  {
+    "time": "2025-08-28 22:05:57",
+    "entry": "macro_test"
+  },
+  {
+    "time": "2025-08-28 22:06:14",
+    "entry": "macro_debug tryis"
+  },
+  {
+    "time": "2025-08-28 22:06:29",
+    "entry": "macro_run tryis"
+  },
+  {
+    "time": "2025-08-28 22:07:33",
+    "entry": "execute macro"
+  },
+  {
+    "time": "2025-08-28 22:10:46",
+    "entry": "macro_debug ret"
+  },
+  {
+    "time": "2025-08-28 22:11:06",
+    "entry": "macro_create sdf"
+  },
+  {
+    "time": "2025-08-28 22:11:26",
+    "entry": "macro_debug sdf"
+  },
+  {
+    "time": "2025-08-28 22:11:31",
+    "entry": "clear the screen"
+  },
+  {
+    "time": "2025-08-28 22:12:17",
+    "entry": "macro_delete sdf"
+  },
+  {
+    "time": "2025-08-28 22:13:49",
+    "entry": "macro_test"
+  },
+  {
+    "time": "2025-08-30 13:15:33",
+    "entry": "macro_create list"
+  },
+  {
+    "time": "2025-08-30 13:15:59",
+    "entry": "macro_create list1"
+  },
+  {
+    "time": "2025-08-30 13:18:54",
+    "entry": "macro_create list"
+  },
+  {
+    "time": "2025-08-30 13:21:51",
+    "entry": "macro_create list"
+  },
+  {
+    "time": "2025-08-30 13:23:07",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-30 13:28:31",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-30 13:28:38",
+    "entry": "IN DETAIL"
+  },
+  {
+    "time": "2025-08-30 13:28:43",
+    "entry": "cls"
+  },
+  {
+    "time": "2025-08-30 13:29:04",
+    "entry": "macro_create list1"
+  },
+  {
+    "time": "2025-08-30 13:29:23",
+    "entry": "macro_run list1"
+  },
+  {
+    "time": "2025-08-30 13:38:07",
+    "entry": "macro_create list2"
+  },
+  {
+    "time": "2025-08-30 13:38:23",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-30 13:38:23",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-30 13:38:24",
+    "entry": "echo done"
+  },
+  {
+    "time": "2025-08-30 13:38:24",
+    "entry": "macro_run list2"
+  },
+  {
+    "time": "2025-08-30 13:40:34",
+    "entry": "cls"
+  },
+  {
+    "time": "2025-08-30 13:40:59",
+    "entry": "cls"
+  },
+  {
+    "time": "2025-08-30 13:41:16",
+    "entry": "macro run list2"
+  },
+  {
+    "time": "2025-08-30 13:41:19",
+    "entry": "cls"
+  },
+  {
+    "time": "2025-08-30 13:41:27",
+    "entry": "list all files"
+  },
+  {
+    "time": "2025-08-30 13:41:27",
+    "entry": "battery"
+  },
+  {
+    "time": "2025-08-30 13:41:28",
+    "entry": "echo done"
+  },
+  {
+    "time": "2025-08-30 13:41:28",
+    "entry": "macro_run list2"
   }
 ]

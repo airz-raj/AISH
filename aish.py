@@ -7,6 +7,7 @@ or fall back to shell commands resolved via commands.json (OS-aware).
 """
 import os
 import json
+from zomode import zomode_menu
 import subprocess
 import time
 import random
@@ -14,6 +15,8 @@ from typing import Dict, Any, List, Optional
 from voice_input import setup_voice_input, get_voice_input, is_voice_available, voice_status
 from parser import parse_command 
 from colorama import Fore, Style, init
+from context import resolve_with_context, AishContext
+ctx = AishContext()
 
 # import animations (from the files your friend provided)
 from animations import display_banner, glitch_animation, impact_animation
@@ -302,59 +305,79 @@ def show_suggestions(user_input):
 
 # aish.py - Update the resolve_and_run function to handle built-in commands properly:
 
+# aish.py - Add this near the top of resolve_and_run function:
+
+# aish.py - Modify resolve_and_run to return (success, output):
+
 def resolve_and_run(raw_input: str):
     s = raw_input.strip()
     if not s:
         blast_animation()
         print(Fore.YELLOW + "Please enter a command" + Style.RESET_ALL)
-        return
+        return False, "No command entered"
 
     # Handle built-in AISH commands first
     if s.lower() in ['help', '?', 'menu']:
         show_help_menu()
-        return
+        return True, "Help menu shown"
 
     if s.lower() in ['clear', 'cls']:
         os.system("cls" if OS_NAME == "windows" else "clear")
         append_basic_history(s)
         append_history(s, 0, "Screen cleared")
-        return
+        return True, "Screen cleared"
 
-    # Check if it's a built-in command before parsing
+    # Check for macro commands specifically
+    if s.startswith('macro_'):
+        macro_parts = s.split('_')
+        if len(macro_parts) >= 2:
+            macro_action = macro_parts[1]
+            macro_args = macro_parts[2:] if len(macro_parts) > 2 else []
+            
+            if macro_action in ["create", "run", "list", "delete", "help", "debug"]:
+                func_name = f"macro_{macro_action}"
+                if func_name in core_commands.COMMAND_REGISTRY:
+                    func = core_commands.COMMAND_REGISTRY[func_name]
+                    try:
+                        # Capture output for macro commands too
+                        import io
+                        import contextlib
+                        output_capture = io.StringIO()
+                        with contextlib.redirect_stdout(output_capture):
+                            func(macro_args)
+                        output = output_capture.getvalue()
+                        return True, output
+                    except Exception as e:
+                        return False, f"Error: {e}"
+
+    # Check if it's a regular built-in command
     if s.lower() in core_commands.COMMAND_REGISTRY:
-        # Handle built-in commands directly
         func = core_commands.COMMAND_REGISTRY[s.lower()]
         try:
-            processing_animation()
             # Capture output for built-in commands
             import io
             import contextlib
             output_capture = io.StringIO()
             with contextlib.redirect_stdout(output_capture):
-                func([])  # Pass empty args for commands like 'history'
+                func([])
             output = output_capture.getvalue()
-            success_animation()
-            print(output)  # Show the command output
             append_basic_history(s)
             append_history(s, 0, output[:200])
-            return
+            return True, output
         except Exception as e:
-            blast_animation()
-            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
             append_basic_history(s)
             append_history(s, 1, f"Error: {str(e)[:200]}")
-            return
+            return False, f"Error: {e}"
 
     # Use the parser to parse other commands
     parsed = parse_command(s, commands_json, patterns_json, OS_NAME)
     
     if not parsed:
         blast_animation()
-        print(Fore.YELLOW + "Could not parse command" + Style.RESET_ALL)
         show_suggestions(s)
         append_basic_history(s)
         append_history(s, 1, "Parse error")
-        return
+        return False, "Could not parse command"
 
     kind = parsed[0]
     exit_code = 0
@@ -376,14 +399,13 @@ def resolve_and_run(raw_input: str):
             output_snippet = output[:200]
             append_basic_history(s)
             append_history(s, exit_code, output_snippet)
-            return
+            return True, output
         except Exception as e:
             blast_animation()
-            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
             show_suggestions(s)
             append_basic_history(s)
             append_history(s, 1, f"Error: {str(e)[:200]}")
-            return
+            return False, f"Error: {e}"
 
     elif kind == "shell":
         cmd_to_run = parsed[1]
@@ -393,13 +415,11 @@ def resolve_and_run(raw_input: str):
             result, stdout, stderr = run_subprocess(cmd_to_run, capture_output=True)
             exit_code = result
             
-            if stdout:
-                print(stdout)
-                output_snippet = stdout[:200]
+            output = stdout
             if stderr:
-                print(Fore.RED + stderr + Style.RESET_ALL)
-                if not output_snippet:
-                    output_snippet = stderr[:200]
+                output += "\n" + stderr
+            
+            output_snippet = output[:200]
             
             if exit_code == 0:
                 success_animation()
@@ -409,13 +429,15 @@ def resolve_and_run(raw_input: str):
             
             append_basic_history(s)
             append_history(s, exit_code, output_snippet)
+            return exit_code == 0, output
             
         except Exception as e:
             blast_animation()
-            print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
             show_suggestions(s)
             append_basic_history(s)
             append_history(s, 1, f"Error: {str(e)[:200]}")
+            return False, f"Error: {e}"
+            
 def show_help_menu():
     """Show comprehensive help menu"""
     print(Fore.CYAN + "\n" + "="*60 + Style.RESET_ALL)
@@ -531,8 +553,9 @@ def main():
             print(Fore.YELLOW + "6)" + Style.RESET_ALL + " Help & tips")
             print(Fore.YELLOW + "7)" + Style.RESET_ALL + " Exit")
             print(Fore.YELLOW + "8)" + Style.RESET_ALL + " Voice input mode")
+            print(Fore.YELLOW + "9)" + Style.RESET_ALL + " Z-Omode")
 
-            choice = get_advanced_input(Fore.GREEN + "Choose an option (1-8): " + Style.RESET_ALL, aish_completer).strip()
+            choice = get_advanced_input(Fore.GREEN + "Choose an option (1-9): " + Style.RESET_ALL, aish_completer).strip()
 
             # Handle voice input option separately
             if choice == "8":
@@ -623,11 +646,22 @@ def process_menu_option(choice: str):
 
         # 🔥 Run through the same pipeline as before
             try:
-            # parse
-                resolve_and_run(user_input)
-            
+    # 🔹 Expand natural language with context (pronouns, synonyms, etc.)
+                resolved_input = resolve_with_context(user_input, ctx)
+
+    # 🔹 Run command using the full resolver
+                success, output = resolve_and_run(resolved_input)
+
+    # 🔹 Print the captured output so you actually see results
+                if output and output.strip():
+                    print(output.strip())
+
+    # 🔹 Update context with results (store output + exit code properly)
+                ctx.update(resolved_input,output,type_="command",exit_code=0 if success else 1)
+
             except Exception as e:
                 print(Fore.RED + f"Error: {e}" + Style.RESET_ALL)
+
 
 
 
@@ -719,7 +753,8 @@ def process_menu_option(choice: str):
     elif choice == "7":
         exit_animation()
         exit(0)  # Exit the program completely
-
+    elif choice == "9":
+        zomode_menu()
     else:
         print(Fore.RED + "Invalid option! Please choose 1-8." + Style.RESET_ALL)
         print(Fore.YELLOW + "💡 Tip: Type the number only (e.g., '1' for Run command)" + Style.RESET_ALL)
@@ -748,6 +783,7 @@ def migrate_history_format():
                 
     except Exception:
         pass 
+# Add this temporary function to debug pattern matching
 
 if __name__ == "__main__":
     main()

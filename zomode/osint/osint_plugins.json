@@ -1,0 +1,26 @@
+[
+  {
+    "name": "sysinfo",
+    "file": "scripts/sysinfo.bat",
+    "type": "bat",
+    "primary": true
+  },
+  {
+    "name": "sysinfo",
+    "file": "scripts/sysinfo.py",
+    "type": "py",
+    "primary": true
+  },
+  {
+    "name": "sysinfo_send",
+    "file": "scripts/sysinfo_send.sh",
+    "type": "sh",
+    "primary": true
+  },
+  {
+    "name": "syst",
+    "file": "scripts/syst.sh",
+    "type": "sh",
+    "primary": true
+  }
+]

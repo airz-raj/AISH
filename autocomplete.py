@@ -19,6 +19,19 @@ except ImportError:
 class AISHCompleter(Completer):
     """Custom completer for AISH with better matching"""
     
+
+    from zomode.osint import tools
+
+    def get_completions(prefix):
+    # your existing base commands
+        base_commands = ["help", "exit", "macro_run", "z-omode"]
+
+    # discover OSINT scripts dynamically
+        script_names = tools.list_scripts()
+
+        completions = base_commands + script_names
+        return [c for c in completions if c.startswith(prefix)]
+
     def __init__(self, commands: Dict[str, Any], patterns: Dict[str, Any], builtins: List[str]):
         self.commands = commands
         self.patterns = patterns

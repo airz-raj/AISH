@@ -5,6 +5,7 @@ from difflib import get_close_matches
 from typing import Optional, Tuple, List
 from utils import resource_path
 from core_commands import COMMAND_REGISTRY
+from core_commands import macro_help_cmd 
 
 def normalize(s: str) -> str:
     return re.sub(r"\s+", " ", s.strip())
@@ -41,9 +42,49 @@ def parse_command(user_input: str, commands_json: dict, patterns_json: dict, cur
     if ui == "":
         return None
 
+    # 0. Check for macro commands first
+    if ui.startswith("macro "):
+        macro_parts = ui.split()
+        if len(macro_parts) >= 2:
+            macro_action = macro_parts[1]
+            macro_args = macro_parts[2:] if len(macro_parts) > 2 else []
+            
+            # Map to appropriate macro command
+            if macro_action in ["create", "run", "list", "delete", "help"]:
+                return ("builtin", COMMAND_REGISTRY.get(f"macro {macro_action}", macro_help_cmd), macro_args)
+
+def parse_command(user_input: str, commands_json: dict, patterns_json: dict, current_os: str):
+    ui = normalize(user_input)
+    if ui == "":
+        return None
+
     # 1. FIRST check patterns: exact match (this should be the first check)
     # Convert patterns to lowercase for case-insensitive matching
     ui_lower = ui.lower()
+    
+    if ui_lower.startswith("create macro"):
+        macro_name = ui_lower[12:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_create"], [macro_name])
+    elif ui_lower.startswith("make macro"):
+        macro_name = ui_lower[10:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_create"], [macro_name])
+    elif ui_lower.startswith("run macro"):
+        macro_name = ui_lower[9:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_run"], [macro_name])
+    elif ui_lower.startswith("execute macro"):
+        macro_name = ui_lower[13:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_run"], [macro_name])
+    elif ui_lower.startswith("list macros"):
+        return ("builtin", COMMAND_REGISTRY["macro_list"], [])
+    elif ui_lower.startswith("show macros"):
+        return ("builtin", COMMAND_REGISTRY["macro_list"], [])
+    elif ui_lower.startswith("delete macro"):
+        macro_name = ui_lower[12:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_delete"], [macro_name])
+    elif ui_lower.startswith("remove macro"):
+        macro_name = ui_lower[12:].strip()
+        return ("builtin", COMMAND_REGISTRY["macro_delete"], [macro_name])
+    
     if ui_lower in patterns_json:
         key = patterns_json[ui_lower]
         # If pattern maps to builtin
@@ -94,6 +135,25 @@ def parse_command(user_input: str, commands_json: dict, patterns_json: dict, cur
         base = commands_json[cand_cmd[0]].get(current_os, commands_json[cand_cmd[0]].get("linux"))
         full = f"{base} {' '.join(tail)}".strip()
         return ("shell", full)
+    # parser.py - Add this right after the patterns check:
+
+    # Special handling for macro commands
+    macro_prefixes = ["create macro", "make macro", "run macro", "execute macro", 
+                     "list macros", "show macros", "delete macro", "remove macro"]
+    
+    for prefix in macro_prefixes:
+        if ui_lower.startswith(prefix):
+            remaining = ui_lower[len(prefix):].strip()
+            args = [remaining] if remaining else []
+            
+            if prefix in ["create macro", "make macro"]:
+                return ("builtin", COMMAND_REGISTRY["macro_create"], args)
+            elif prefix in ["run macro", "execute macro"]:
+                return ("builtin", COMMAND_REGISTRY["macro_run"], args)
+            elif prefix in ["list macros", "show macros"]:
+                return ("builtin", COMMAND_REGISTRY["macro_list"], args)
+            elif prefix in ["delete macro", "remove macro"]:
+                return ("builtin", COMMAND_REGISTRY["macro_delete"], args)
 
     # 4. last-ditch: treat whole input as shell passthrough
     return ("shell", ui)

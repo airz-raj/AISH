@@ -6,14 +6,20 @@ COMMAND_REGISTRY maps command key -> function.
 """
 
 import os
+from zomode import zomode_menu
+import parser
 import sys
 import json
 import socket
 import zipfile
 import re
 import platform
-from datetime import datetime
+import subprocess
+from datetime import datetime   
 from typing import List, Optional
+from zomode.osint import tools
+
+
 try:
     from colorama import Fore, Style
 except ImportError:
@@ -31,6 +37,177 @@ except Exception:
     psutil = None  # optional but recommended
 
 from utils import run_subprocess, detect_os
+# core_commands.py - Add these macro-related commands
+
+# Add import at the top
+import macros
+
+
+def run_command(user_input):
+    # check if it matches an ONIST script
+    scripts = tools.list_scripts()
+    if user_input in scripts:
+        tools.run_script(user_input)
+        return True
+    return False
+
+def detect_os():
+    """Detect the current operating system"""
+    import platform
+    return platform.system().lower()
+
+def macro_create_cmd(args: List[str] = None):
+    """macro create <name> — create a new macro interactively"""
+    if args is None:
+        args = []
+    
+    if not args:
+        print("Usage: macro create <macro_name>")
+        print("Example: macro create daily_setup")
+        return
+    
+    macro_name = ' '.join(args).strip()
+    if not macro_name:
+        print("Error: Macro name cannot be empty")
+        print("Usage: macro create <macro_name>")
+        return
+    
+    print(f"{Fore.CYAN}🤖 Creating macro '{macro_name}'{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}Enter commands one per line.{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}Type '!done' on a new line when finished.{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}Type '!cancel' to abort.{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    
+    commands = []
+    command_count = 0
+    
+    try:
+        while True:
+            try:
+                # Get input with proper prompt
+                prompt = f"{Fore.GREEN}cmd_{command_count + 1}>{Style.RESET_ALL} "
+                command = input(prompt).strip()
+                
+                if command == '!done':
+                    if not commands:
+                        print(f"{Fore.RED}No commands added. Macro creation cancelled.{Style.RESET_ALL}")
+                        return
+                    break
+                elif command == '!cancel':
+                    print(f"{Fore.YELLOW}Macro creation cancelled.{Style.RESET_ALL}")
+                    return
+                elif command:
+                    commands.append(command)
+                    command_count += 1
+                else:
+                    # Empty line, just continue
+                    continue
+                    
+            except EOFError:
+                print(f"\n{Fore.YELLOW}Macro creation completed.{Style.RESET_ALL}")
+                break
+            except KeyboardInterrupt:
+                print(f"\n{Fore.YELLOW}Macro creation cancelled.{Style.RESET_ALL}")
+                return
+    
+    except Exception as e:
+        print(f"{Fore.RED}Error during macro creation: {e}{Style.RESET_ALL}")
+        return
+    
+    if commands:
+        macros.create_macro(macro_name, commands)
+        print(f"{Fore.GREEN}✓ Macro '{macro_name}' created with {len(commands)} commands{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}Commands saved:{Style.RESET_ALL}")
+        for i, cmd in enumerate(commands, 1):
+            print(f"  {i}. {cmd}")
+
+def macro_list_cmd(args: List[str] = None):
+    """macro list — show all available macros"""
+    all_macros = macros.list_macros()
+    
+    if not all_macros:
+        print(f"{Fore.YELLOW}No macros found.{Style.RESET_ALL}")
+        print("Use 'macro create <name>' to create your first macro.")
+        return
+    
+    print(f"{Fore.CYAN}📋 Available Macros:{Style.RESET_ALL}")
+    for macro_name, commands in all_macros.items():
+        print(f"{Fore.GREEN}  {macro_name}:{Style.RESET_ALL}")
+        for i, cmd in enumerate(commands, 1):
+            print(f"    {i}. {cmd}")
+
+
+def macro_run_cmd(args: List[str] = None):
+    """macro run <name> — run a macro"""
+    from aish import resolve_and_run
+    if not args:
+        print("Usage: macro run <macro_name>")
+        print("Example: macro run daily_setup")
+        return
+    
+    macro_name = ' '.join(args).strip()
+    macro_commands = macros.get_macro(macro_name)
+    
+    if not macro_commands:
+        print(f"{Fore.RED}✗ Macro '{macro_name}' not found{Style.RESET_ALL}")
+        print(f"Use 'macro list' to see available macros")
+        return
+    
+    print(f"{Fore.CYAN}🚀 Running macro '{macro_name}' ({len(macro_commands)} commands)...{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*60}{Style.RESET_ALL}")
+    
+    success_count = 0
+    
+    for i, command in enumerate(macro_commands, 1):
+        print(f"{Fore.YELLOW}▶ [{i}/{len(macro_commands)}] Executing: {command}{Style.RESET_ALL}")
+        
+        try:
+            # Execute the command directly
+            success, output = resolve_and_run(command)   # 🔥 use full natural language + built-in resolver
+
+            if output and output.strip():
+                print(output, end="")   # 🔥 preserve original colors + newlines
+
+
+            if success:
+                success_count += 1
+                print(f"{Fore.GREEN}✓ Command completed successfully{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.RED}❌ Command failed{Style.RESET_ALL}")
+
+                
+        except Exception as e:
+            print(f"{Fore.RED}❌ Command failed with error: {e}{Style.RESET_ALL}")
+        
+        print(f"{Fore.CYAN}{'-'*40}{Style.RESET_ALL}")
+    
+    print(f"{Fore.GREEN}✓ Macro completed: {success_count}/{len(macro_commands)} commands successful{Style.RESET_ALL}")
+    return success_count == len(macro_commands)
+
+
+def macro_delete_cmd(args: List[str] = None):
+    """macro delete <name> — delete a macro"""
+    if not args:
+        print("Usage: macro delete <macro_name>")
+        print("Example: macro delete daily_setup")
+        return
+    
+    macro_name = args[0]
+    macros.delete_macro(macro_name)
+
+def macro_help_cmd(args: List[str] = None):
+    """macro help — show macro system help"""
+    print(f"{Fore.CYAN}🤖 AISH Macro System Help{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}Usage:{Style.RESET_ALL}")
+    print("  macro create <name>    - Create a new macro interactively")
+    print("  macro run <name>       - Run a macro")
+    print("  macro list             - List all macros")
+    print("  macro delete <name>    - Delete a macro")
+    print("  macro help             - Show this help")
+    print(f"\n{Fore.YELLOW}Examples:{Style.RESET_ALL}")
+    print("  macro create daily_setup")
+    print("  macro run backup_project")
+    print("  macro list")
 
 # -------------------------
 # Helpers
@@ -291,13 +468,11 @@ def formatjson_cmd(args: List[str]):
     except Exception as e:
         print("Invalid JSON or error:", e)
         
-# core_commands.py - Add this new command:
+def detect_os():
+    """Detect the current operating system"""
+    import platform
+    return platform.system().lower()
 
-# core_commands.py - Update history_cmd to read from the enhanced history file:
-
-# core_commands.py - Replace the history_cmd function with this improved version:
-
-# core_commands.py - Update history_cmd to handle empty history better:
 
 def history_cmd(args: List[str] = None):
     """history — show color-coded enhanced command history in a nice table format"""
@@ -416,10 +591,100 @@ def open_history_file_cmd(args: List[str] = None):
     except Exception as e:
         print(f"Error opening file: {e}")
 
+def macro_debug_cmd(args: List[str] = None):
+    """macro debug — debug macro system"""
+    macro_name = ' '.join(args).strip() if args else None
+    
+    if macro_name:
+        print(f"{Fore.CYAN}Debugging macro: '{macro_name}'{Style.RESET_ALL}")
+        commands = macros.get_macro(macro_name)
+        if commands:
+            print(f"Commands found: {len(commands)}")
+            for i, cmd in enumerate(commands, 1):
+                print(f"  {i}. {cmd}")
+        else:
+            print(f"{Fore.RED}Macro not found{Style.RESET_ALL}")
+    else:
+        print(f"{Fore.CYAN}All macros:{Style.RESET_ALL}")
+        all_macros = macros.list_macros()
+        for name, commands in all_macros.items():
+            print(f"{Fore.GREEN}{name}:{Style.RESET_ALL} {len(commands)} commands")
+
+# core_commands.py - Add this function to execute commands directly:
+
+def execute_command_directly(command: str):
+    """Execute a command directly and return its output"""
+    try:
+        # Handle built-in commands
+        if command.lower() in COMMAND_REGISTRY:
+            func = COMMAND_REGISTRY[command.lower()]
+            import io
+            import contextlib
+            output_capture = io.StringIO()
+            with contextlib.redirect_stdout(output_capture):
+                func([])
+            return output_capture.getvalue(), 0
+        
+        # Handle shell commands directly
+        import subprocess
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        output = result.stdout
+        if result.stderr:
+            output += "\n" + result.stderr
+        return output, result.returncode
+        
+    except Exception as e:
+        return f"Error: {e}", 1
+
+def macro_debug_cmd(args: List[str] = None):
+    """macro debug — show detailed macro information"""
+    if args:
+        macro_name = ' '.join(args).strip()
+        commands = macros.get_macro(macro_name)
+        if commands:
+            print(f"{Fore.CYAN}Macro: {macro_name}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Commands: {Style.RESET_ALL}")
+            for i, cmd in enumerate(commands, 1):
+                print(f"  {i}. '{cmd}'")
+            
+            # Test each command
+            print(f"\n{Fore.CYAN}Testing commands:{Style.RESET_ALL}")
+            for i, cmd in enumerate(commands, 1):
+                print(f"{Fore.YELLOW}Testing command {i}: '{cmd}'{Style.RESET_ALL}")
+                output, exit_code = execute_command_directly(cmd)
+                if output:
+                    print(f"{Fore.BLUE}Output: {output[:100]}...{Style.RESET_ALL}")
+                print(f"Exit code: {exit_code}")
+                print()
+        else:
+            print(f"{Fore.RED}Macro '{macro_name}' not found{Style.RESET_ALL}")
+    else:
+        all_macros = macros.list_macros()
+        print(f"{Fore.CYAN}All macros:{Style.RESET_ALL}")
+        for name, commands in all_macros.items():
+            print(f"{Fore.GREEN}{name}:{Style.RESET_ALL} {len(commands)} commands")
+            for i, cmd in enumerate(commands, 1):
+                print(f"  {i}. {cmd}")
+                
+def macro_test_cmd(args: List[str] = None):
+    """macro test — create and run a test macro"""
+    # Create a simple test macro
+    test_commands = [
+        "echo 'Hello from macro'",
+        "pwd",
+        "whoami",
+        "date"
+    ]
+    
+    macros.create_macro("test_macro", test_commands)
+    print(f"{Fore.GREEN}Created test macro{Style.RESET_ALL}")
+
+    macro_run_cmd(["test_macro"])
 
 COMMAND_REGISTRY = {
     "sysinfo": sysinfo,
     "battery": battery,
+    "z-omode": zomode_menu,
     "zip": zip_cmd,
     "unzip": unzip_cmd,
     "search": search_cmd,
@@ -433,5 +698,14 @@ COMMAND_REGISTRY = {
     "formatjson": formatjson_cmd,
     "history": history_cmd,          # Formatted table view
     "viewhistoryfile": view_history_file_cmd,  # Raw JSON view
-    "historyjson": view_history_file_cmd,# ADD THIS LINE
+    "historyjson": view_history_file_cmd,
+    "macro": macro_help_cmd,  # Default to help
+    "macro_create": macro_create_cmd,
+    "macro_run": macro_run_cmd, 
+    "macro_list": macro_list_cmd,
+    "macro_delete": macro_delete_cmd,
+    "macro_help": macro_help_cmd,
+    "macro_debug": macro_debug_cmd,
+    "macro_test": macro_test_cmd # ADD THIS LINE
 }
+

@@ -31,5 +31,14 @@
   "processes": "ps",
   "kill process": "kill",
   "word count": "wc",
-  "format json": "formatjson"
+  "format json": "formatjson",
+  "create macro": "macro_create",
+  "make macro": "macro_create",
+  "run macro": "macro_run", 
+  "execute macro": "macro_run",
+  "list macros": "macro_list",
+  "show macros": "macro_list",
+  "delete macro": "macro_delete",
+  "remove macro": "macro_delete",
+  "macro help": "macro_help"
 }
