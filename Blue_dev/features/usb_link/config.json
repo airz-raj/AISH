@@ -1,0 +1,16 @@
+{
+  "vendor_id": null,
+  "product_id": null,
+  "serial_port": null,
+  "usb_mappings": {
+    "events": {
+      "BTN1": "echo 'BTN1 pressed'",
+      "BTN2": "echo 'BTN2 pressed'"
+    },
+    "led_feedback": {
+      "running": "blue",
+      "success": "green",
+      "failure": "red"
+    }
+  }
+}

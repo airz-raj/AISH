@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "excessive_outbound_bytes": 10485760
+  }
+}

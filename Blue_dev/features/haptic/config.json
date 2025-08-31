@@ -1,0 +1,18 @@
+{
+  "devices": {
+    "Phone": {
+      "address": "A8:5E:F2:2E:5F:32",
+      "char_uuid": "0"
+    },
+    "rsp": {
+      "address": "a",
+      "char_uuid": "a"
+    }
+  },
+  "char_uuid": null,
+  "haptic_patterns": {
+    "success": "short",
+    "warning": "pulse",
+    "critical": "long"
+  }
+}

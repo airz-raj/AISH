@@ -1,6 +1,3 @@
-from check_requirements import check_modules
-check_modules()
-
 import platform, psutil, socket, os
 
 print("System:", platform.system())

@@ -1,5 +1,6 @@
 from . import osint
 from . import tor_integration
+
 import time
 import sys
 from colorama import init, Fore, Style
@@ -16,13 +17,11 @@ def typewriter(text, delay=0.01, color=Fore.LIGHTWHITE_EX):
     print()
 
 def print_colored_menu(options):
-    """Ubuntu/Debian style colored menu"""
     for idx, opt in enumerate(options, 1):
         print(f"{Fore.LIGHTRED_EX}{idx}) {Fore.LIGHTWHITE_EX}{opt}")
     print(f"{Fore.LIGHTRED_EX}0) {Fore.LIGHTWHITE_EX}Back")
 
 def loading_dots(message="Loading", duration=2.0):
-    """Simple loading animation with dots."""
     dots = ["   ", ".  ", ".. ", "..."]
     end_time = time.time() + duration
     idx = 0
@@ -42,7 +41,11 @@ def zomode_menu(args=None):
     startup_animation()
     while True:
         typewriter("\n=== Z-Omode ===", color=Fore.LIGHTRED_EX)
-        options = ["OSINT (OSINT Toolkit)", "Tor Integration", "Ter-Bro (coming soon)"]
+        options = [
+            "OSINT (OSINT Toolkit)",
+            "Tor Integration",
+            "Ter-Bro (coming soon)"
+        ]
         print_colored_menu(options)
 
         choice = input(Fore.LIGHTCYAN_EX + "Select an option: " + Style.RESET_ALL).strip()
@@ -78,7 +81,7 @@ def tor_menu():
             break
         elif choice == "1":
             cmd = input("Enter command to run through Tor: ").split()
-            loading_dots("Executing", duration=1.0)  # changed to 1 sec
+            loading_dots("Executing", duration=1.0)
             print(tor_integration.torify_cmd(cmd))
         elif choice == "2":
             loading_dots("Launching Tor Browser", duration=1.0)

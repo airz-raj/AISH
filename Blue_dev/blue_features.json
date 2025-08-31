@@ -1,0 +1,24 @@
+{
+  "features": [
+    {
+      "name": "USB Link",
+      "module": "usb_link",
+      "enabled": true
+    },
+    {
+      "name": "BLE Bridge",
+      "module": "ble_bridge",
+      "enabled": true
+    },
+    {
+      "name": "Haptic Feedback",
+      "module": "haptic",
+      "enabled": true
+    },
+    {
+      "name": "Anomaly Monitor",
+      "module": "anomaly_monitor",
+      "enabled": true
+    }
+  ]
+}

@@ -7,6 +7,7 @@ or fall back to shell commands resolved via commands.json (OS-aware).
 """
 import os
 import json
+from gmode import gmode_menu
 from zomode import zomode_menu
 import subprocess
 import time
@@ -16,6 +17,7 @@ from voice_input import setup_voice_input, get_voice_input, is_voice_available, 
 from parser import parse_command 
 from colorama import Fore, Style, init
 from context import resolve_with_context, AishContext
+from Blue_dev import blue_dev_menu
 ctx = AishContext()
 
 # import animations (from the files your friend provided)
@@ -554,8 +556,10 @@ def main():
             print(Fore.YELLOW + "7)" + Style.RESET_ALL + " Exit")
             print(Fore.YELLOW + "8)" + Style.RESET_ALL + " Voice input mode")
             print(Fore.YELLOW + "9)" + Style.RESET_ALL + " Z-Omode")
+            print(Fore.YELLOW + "10)" + Style.RESET_ALL + " GMode")
+            print(Fore.YELLOW + "0)" + Style.RESET_ALL + " Blue_dev")
 
-            choice = get_advanced_input(Fore.GREEN + "Choose an option (1-9): " + Style.RESET_ALL, aish_completer).strip()
+            choice = get_advanced_input(Fore.GREEN + "Choose an option (0, 1-10): " + Style.RESET_ALL, aish_completer).strip()
 
             # Handle voice input option separately
             if choice == "8":
@@ -752,11 +756,20 @@ def process_menu_option(choice: str):
 
     elif choice == "7":
         exit_animation()
-        exit(0)  # Exit the program completely
+        exit(0)
+    
     elif choice == "9":
         zomode_menu()
+        
+    elif choice == "10":
+        gmode_menu()
+
+
+    elif choice == "0":
+        blue_dev_menu()
+
     else:
-        print(Fore.RED + "Invalid option! Please choose 1-8." + Style.RESET_ALL)
+        print(Fore.RED + "Invalid option! Please choose 0-10." + Style.RESET_ALL)
         print(Fore.YELLOW + "💡 Tip: Type the number only (e.g., '1' for Run command)" + Style.RESET_ALL)
 
 
