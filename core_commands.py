@@ -41,6 +41,172 @@ from utils import run_subprocess, detect_os
 
 # Add import at the top
 import macros
+# Add this to core_commands.py to integrate ONIST commands
+
+# At the top of core_commands.py, add this import:
+try:
+    from zomode.anomaly_detection import ONIST_COMMANDS
+    HAS_ANOMALY_DETECTION = True
+except ImportError:
+    ONIST_COMMANDS = {}
+    HAS_ANOMALY_DETECTION = False
+# Add this to core_commands.py to integrate Project Map commands
+
+# At the top of core_commands.py, add this import:
+try:
+    from zomode.project_map import PROJECT_MAP_COMMANDS
+    HAS_PROJECT_MAP = True
+except ImportError:
+    PROJECT_MAP_COMMANDS = {}
+    HAS_PROJECT_MAP = False
+
+# Add these wrapper functions to core_commands.py:
+
+def project_analyze_cmd(args):
+    """project analyze [path] — analyze project dependencies"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_analyze"](args)
+
+def project_tree_cmd(args):
+    """project tree [module] — show dependency tree"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_tree"](args)
+
+def project_network_cmd(args):
+    """project network — show network graph view"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_network"](args)
+
+def project_summary_cmd(args):
+    """project summary — show project overview"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_summary"](args)
+
+def project_interactive_cmd(args):
+    """project interactive — start interactive explorer"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_interactive"](args)
+
+def project_stats_cmd(args):
+    """project stats — detailed statistics"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_stats"](args)
+
+def project_cycles_cmd(args):
+    """project cycles — find circular dependencies"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_cycles"](args)
+
+def project_export_cmd(args):
+    """project export [file] — export analysis to JSON"""
+    if not HAS_PROJECT_MAP:
+        print("Project mapping module not available")
+        return
+    PROJECT_MAP_COMMANDS["project_export"](args)
+
+# Update the COMMAND_REGISTRY to include these new commands:
+ADDITIONAL_PROJECT_MAP_COMMANDS = {
+    "project": project_summary_cmd,  # Default project command shows summary
+    "project_analyze": project_analyze_cmd,
+    "project_tree": project_tree_cmd,
+    "project_network": project_network_cmd,
+    "project_summary": project_summary_cmd,
+    "project_interactive": project_interactive_cmd,
+    "project_stats": project_stats_cmd,
+    "project_cycles": project_cycles_cmd,
+    "project_export": project_export_cmd,
+    "projectmap": project_interactive_cmd,  # Shortcut to interactive mode
+    "depmap": project_tree_cmd,  # Shortcut to tree view
+    "analyze": project_analyze_cmd  # Generic analyze command
+}
+
+# Merge with existing COMMAND_REGISTRY:
+# COMMAND_REGISTRY.update(ADDITIONAL_PROJECT_MAP_COMMANDS)
+
+def onist_monitor_cmd(args):
+    """onist monitor — start real-time network anomaly monitoring"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_monitor"](args)
+
+def onist_stop_cmd(args):
+    """onist stop — stop network monitoring"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available") 
+        return
+    ONIST_COMMANDS["onist_stop"](args)
+
+def onist_status_cmd(args):
+    """onist status — show monitoring status"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_status"](args)
+
+def onist_alerts_cmd(args):
+    """onist alerts — view recent security alerts"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_alerts"](args)
+
+def onist_investigate_cmd(args):
+    """onist investigate <id> — investigate specific anomaly"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_investigate"](args)
+
+def onist_connections_cmd(args):
+    """onist connections — show active network connections"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_connections"](args)
+
+def onist_baseline_cmd(args):
+    """onist baseline — establish network baseline"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_baseline"](args)
+
+def onist_config_cmd(args):
+    """onist config — configure detection settings"""
+    if not HAS_ANOMALY_DETECTION:
+        print("Anomaly detection module not available")
+        return
+    ONIST_COMMANDS["onist_config"](args)
+
+# Update the COMMAND_REGISTRY at the bottom to include these new commands:
+# Add these entries to your existing COMMAND_REGISTRY:
+
+ADDITIONAL_ONIST_COMMANDS = {
+    "onist": onist_status_cmd,  # Default onist command shows status
+    "onist_monitor": onist_monitor_cmd,
+    "onist_stop": onist_stop_cmd,
+    "onist_status": onist_status_cmd,
+    "onist_alerts": onist_alerts_cmd,
+    "onist_investigate": onist_investigate_cmd,
+    "onist_connections": onist_connections_cmd,
+    "onist_baseline": onist_baseline_cmd,
+    "onist_config": onist_config_cmd
+}
 
 
 def run_command(user_input):

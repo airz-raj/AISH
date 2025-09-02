@@ -1,5 +1,7 @@
 from . import osint
 from . import tor_integration
+from . import anomaly_detection
+from . import project_map
 
 import time
 import sys
@@ -43,8 +45,10 @@ def zomode_menu(args=None):
         typewriter("\n=== Z-Omode ===", color=Fore.LIGHTRED_EX)
         options = [
             "OSINT (OSINT Toolkit)",
-            "Tor Integration",
-            "Ter-Bro (coming soon)"
+            "Tor Integration", 
+            "Ter-Bro (coming soon)",
+            "🛡️ Real-Time Anomaly Detection",
+            "🗺️ Interactive Project Dependency Map"
         ]
         print_colored_menu(options)
 
@@ -57,6 +61,10 @@ def zomode_menu(args=None):
             tor_menu()
         elif choice == "3":
             typewriter("⚠ Ter-Bro is not implemented yet.", color=Fore.YELLOW)
+        elif choice == "4":
+            anomaly_detection.anomaly_detection_menu()
+        elif choice == "5":
+            project_map.project_dependency_menu()
         else:
             typewriter("❌ Invalid choice", color=Fore.LIGHTRED_EX)
 

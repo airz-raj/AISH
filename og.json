@@ -1,0 +1,1367 @@
+{
+  "dependencies": {
+    "parser": [
+      "core_commands",
+      "utils"
+    ],
+    "context": [
+      "utils"
+    ],
+    "aish": [
+      "zomode",
+      "parser",
+      "animations",
+      "gmode",
+      "Blue_dev",
+      "voice_input",
+      "core_commands",
+      "safety",
+      "context",
+      "autocomplete",
+      "utils"
+    ],
+    "core_commands": [
+      "zomode.anomaly_detection",
+      "zomode",
+      "utils",
+      "parser",
+      "aish",
+      "zomode.project_map",
+      "macros"
+    ],
+    "executor": [
+      "utils"
+    ],
+    "Blue_dev.feature_loader": [
+      "utils.config_loader"
+    ],
+    "Blue_dev.__init__": [
+      "utils.logger"
+    ],
+    "Blue_dev.features.ble_bridge.core": [
+      "utils.logger",
+      "utils.config_loader"
+    ],
+    "Blue_dev.features.usb_link.core": [
+      "utils.logger",
+      "utils.config_loader"
+    ],
+    "Blue_dev.features.usb_link.cli": [
+      "utils.logger",
+      "utils.config_loader"
+    ],
+    "Blue_dev.features.anomaly_monitor.core": [
+      "utils.logger",
+      "utils.config_loader"
+    ],
+    "Blue_dev.features.haptic.core": [
+      "utils.logger",
+      "utils.config_loader"
+    ]
+  },
+  "reverse_dependencies": {
+    "utils": [
+      "executor",
+      "parser",
+      "aish",
+      "core_commands",
+      "context"
+    ],
+    "core_commands": [
+      "aish",
+      "parser"
+    ],
+    "gmode": [
+      "aish"
+    ],
+    "zomode": [
+      "aish",
+      "core_commands"
+    ],
+    "voice_input": [
+      "aish"
+    ],
+    "parser": [
+      "aish",
+      "core_commands"
+    ],
+    "context": [
+      "aish"
+    ],
+    "Blue_dev": [
+      "aish"
+    ],
+    "animations": [
+      "aish"
+    ],
+    "autocomplete": [
+      "aish"
+    ],
+    "safety": [
+      "aish"
+    ],
+    "macros": [
+      "core_commands"
+    ],
+    "zomode.anomaly_detection": [
+      "core_commands"
+    ],
+    "zomode.project_map": [
+      "core_commands"
+    ],
+    "aish": [
+      "core_commands"
+    ],
+    "utils.config_loader": [
+      "Blue_dev.features.usb_link.core",
+      "Blue_dev.features.anomaly_monitor.core",
+      "Blue_dev.features.usb_link.cli",
+      "Blue_dev.features.ble_bridge.core",
+      "Blue_dev.features.haptic.core",
+      "Blue_dev.feature_loader"
+    ],
+    "utils.logger": [
+      "Blue_dev.features.usb_link.core",
+      "Blue_dev.features.anomaly_monitor.core",
+      "Blue_dev.features.usb_link.cli",
+      "Blue_dev.features.ble_bridge.core",
+      "Blue_dev.features.haptic.core",
+      "Blue_dev.__init__"
+    ]
+  },
+  "file_info": {
+    "animations": {
+      "path": "animations.py",
+      "lines": 178,
+      "classes": [],
+      "functions": [
+        "_term_width",
+        "_center",
+        "_gradient_text",
+        "glitch_animation",
+        "impact_animation",
+        "display_banner"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "shutil",
+        "random",
+        "colorama",
+        "pyfiglet"
+      ],
+      "complexity": 16
+    },
+    "voice_input": {
+      "path": "voice_input.py",
+      "lines": 241,
+      "classes": [
+        "VoiceInput"
+      ],
+      "functions": [
+        "setup_voice_input",
+        "get_voice_input",
+        "is_voice_available",
+        "voice_status",
+        "system_voice_input",
+        "__init__",
+        "setup_recognizer",
+        "is_available",
+        "get_voice_status",
+        "listen_voice",
+        "voice_to_command",
+        "_listen_background"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "threading",
+        "time",
+        "select",
+        "typing",
+        "speech_recognition",
+        "pyaudio",
+        "subprocess"
+      ],
+      "complexity": 24
+    },
+    "parser": {
+      "path": "parser.py",
+      "lines": 159,
+      "classes": [],
+      "functions": [
+        "normalize",
+        "load_json",
+        "get_parsing_suggestions",
+        "parse_command",
+        "parse_command"
+      ],
+      "imports": [
+        "json",
+        "re",
+        "difflib",
+        "typing",
+        "utils",
+        "core_commands",
+        "core_commands"
+      ],
+      "complexity": 35
+    },
+    "context": {
+      "path": "context.py",
+      "lines": 111,
+      "classes": [
+        "AishContext"
+      ],
+      "functions": [
+        "load_commands",
+        "resolve_with_context",
+        "__init__",
+        "update",
+        "last_command",
+        "last_cmd_str"
+      ],
+      "imports": [
+        "re",
+        "os",
+        "json",
+        "utils"
+      ],
+      "complexity": 25
+    },
+    "aish": {
+      "path": "aish.py",
+      "lines": 803,
+      "classes": [],
+      "functions": [
+        "voice_to_menu_option",
+        "load_json_safe",
+        "start_animation",
+        "processing_animation",
+        "success_animation",
+        "blast_animation",
+        "exit_animation",
+        "append_history",
+        "append_basic_history",
+        "grouped_commands",
+        "get_command_suggestions",
+        "show_suggestions",
+        "resolve_and_run",
+        "show_help_menu",
+        "voice_listening_animation",
+        "voice_processing_animation",
+        "run_shell_command",
+        "main",
+        "process_menu_option",
+        "migrate_history_format"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "gmode",
+        "zomode",
+        "subprocess",
+        "time",
+        "random",
+        "typing",
+        "voice_input",
+        "parser",
+        "colorama",
+        "context",
+        "Blue_dev",
+        "animations",
+        "sys",
+        "utils",
+        "core_commands",
+        "autocomplete",
+        "io",
+        "contextlib",
+        "io",
+        "contextlib",
+        "io",
+        "contextlib",
+        "safety"
+      ],
+      "complexity": 117
+    },
+    "utils": {
+      "path": "utils.py",
+      "lines": 33,
+      "classes": [],
+      "functions": [
+        "resource_path",
+        "detect_os",
+        "run_subprocess"
+      ],
+      "imports": [
+        "sys",
+        "os",
+        "subprocess",
+        "platform",
+        "typing"
+      ],
+      "complexity": 2
+    },
+    "macros": {
+      "path": "macros.py",
+      "lines": 95,
+      "classes": [],
+      "functions": [
+        "get_macros_path",
+        "load_macros",
+        "save_macros",
+        "create_macro",
+        "get_macro",
+        "list_macros",
+        "delete_macro",
+        "run_macro"
+      ],
+      "imports": [
+        "json",
+        "os",
+        "typing",
+        "colorama"
+      ],
+      "complexity": 10
+    },
+    "core_commands": {
+      "path": "core_commands.py",
+      "lines": 877,
+      "classes": [
+        "Fore",
+        "Style"
+      ],
+      "functions": [
+        "project_analyze_cmd",
+        "project_tree_cmd",
+        "project_network_cmd",
+        "project_summary_cmd",
+        "project_interactive_cmd",
+        "project_stats_cmd",
+        "project_cycles_cmd",
+        "project_export_cmd",
+        "onist_monitor_cmd",
+        "onist_stop_cmd",
+        "onist_status_cmd",
+        "onist_alerts_cmd",
+        "onist_investigate_cmd",
+        "onist_connections_cmd",
+        "onist_baseline_cmd",
+        "onist_config_cmd",
+        "run_command",
+        "detect_os",
+        "macro_create_cmd",
+        "macro_list_cmd",
+        "macro_run_cmd",
+        "macro_delete_cmd",
+        "macro_help_cmd",
+        "_safe_read_text",
+        "sysinfo",
+        "battery",
+        "zip_cmd",
+        "unzip_cmd",
+        "search_cmd",
+        "renamebulk_cmd",
+        "ping_cmd",
+        "traceroute_cmd",
+        "scanport_cmd",
+        "ps_cmd",
+        "kill_cmd",
+        "wc_cmd",
+        "formatjson_cmd",
+        "detect_os",
+        "history_cmd",
+        "view_history_file_cmd",
+        "open_history_file_cmd",
+        "macro_debug_cmd",
+        "execute_command_directly",
+        "macro_debug_cmd",
+        "macro_test_cmd"
+      ],
+      "imports": [
+        "os",
+        "zomode",
+        "parser",
+        "sys",
+        "json",
+        "socket",
+        "zipfile",
+        "re",
+        "platform",
+        "subprocess",
+        "datetime",
+        "typing",
+        "zomode.osint",
+        "utils",
+        "utils",
+        "macros",
+        "colorama",
+        "psutil",
+        "zomode.anomaly_detection",
+        "zomode.project_map",
+        "platform",
+        "aish",
+        "socket",
+        "platform",
+        "subprocess",
+        "io",
+        "contextlib"
+      ],
+      "complexity": 117
+    },
+    "safety": {
+      "path": "safety.py",
+      "lines": 125,
+      "classes": [],
+      "functions": [
+        "is_safe",
+        "get_safety_suggestions",
+        "check",
+        "interactive_safety_check"
+      ],
+      "imports": [
+        "re",
+        "typing"
+      ],
+      "complexity": 15
+    },
+    "autocomplete": {
+      "path": "autocomplete.py",
+      "lines": 101,
+      "classes": [
+        "AISHCompleter"
+      ],
+      "functions": [
+        "create_advanced_autocompleter",
+        "get_advanced_input",
+        "get_completions",
+        "__init__",
+        "get_completions"
+      ],
+      "imports": [
+        "os",
+        "typing",
+        "prompt_toolkit",
+        "prompt_toolkit.completion",
+        "prompt_toolkit.formatted_text",
+        "prompt_toolkit.styles",
+        "prompt_toolkit.document",
+        "zomode.osint"
+      ],
+      "complexity": 9
+    },
+    "explain": {
+      "path": "explain.py",
+      "lines": 7,
+      "classes": [],
+      "functions": [
+        "explain_command"
+      ],
+      "imports": [
+        "json"
+      ],
+      "complexity": 0
+    },
+    "executor": {
+      "path": "executor.py",
+      "lines": 216,
+      "classes": [],
+      "functions": [
+        "processing_animation",
+        "success_animation",
+        "clear_screen",
+        "box_print",
+        "execute_command",
+        "box_print",
+        "clear_screen",
+        "resolve_command",
+        "execute_command"
+      ],
+      "imports": [
+        "os",
+        "subprocess",
+        "typing",
+        "colorama",
+        "utils",
+        "json",
+        "time",
+        "random",
+        "typing",
+        "colorama"
+      ],
+      "complexity": 40
+    },
+    "Blue_dev.feature_loader": {
+      "path": "Blue_dev/feature_loader.py",
+      "lines": 99,
+      "classes": [],
+      "functions": [
+        "_blue_features_path",
+        "list_enabled_features",
+        "get_all_feature_names",
+        "load_feature_module",
+        "list_feature_entries",
+        "load_feature_modules",
+        "toggle_feature"
+      ],
+      "imports": [
+        "importlib",
+        "json",
+        "os",
+        "types",
+        "utils.config_loader"
+      ],
+      "complexity": 9
+    },
+    "Blue_dev.__init__": {
+      "path": "Blue_dev/__init__.py",
+      "lines": 64,
+      "classes": [],
+      "functions": [
+        "blue_dev_menu"
+      ],
+      "imports": [
+        "json",
+        "os",
+        "importlib",
+        "colorama",
+        "feature_loader",
+        "utils.logger"
+      ],
+      "complexity": 13
+    },
+    "Blue_dev.features.ble_bridge.__init__": {
+      "path": "Blue_dev/features/ble_bridge/__init__.py",
+      "lines": 1,
+      "classes": [],
+      "functions": [],
+      "imports": [],
+      "complexity": 0
+    },
+    "Blue_dev.features.ble_bridge.core": {
+      "path": "Blue_dev/features/ble_bridge/core.py",
+      "lines": 80,
+      "classes": [],
+      "functions": [
+        "discover_devices",
+        "link_tag",
+        "ping_tag",
+        "run_interactive"
+      ],
+      "imports": [
+        "asyncio",
+        "time",
+        "json",
+        "os",
+        "utils.logger",
+        "utils.config_loader",
+        "bleak",
+        "bleak"
+      ],
+      "complexity": 14
+    },
+    "Blue_dev.features.ble_bridge.cli": {
+      "path": "Blue_dev/features/ble_bridge/cli.py",
+      "lines": 11,
+      "classes": [],
+      "functions": [
+        "register_commands",
+        "run"
+      ],
+      "imports": [
+        "core"
+      ],
+      "complexity": 0
+    },
+    "Blue_dev.features.usb_link.__init__": {
+      "path": "Blue_dev/features/usb_link/__init__.py",
+      "lines": 1,
+      "classes": [],
+      "functions": [],
+      "imports": [],
+      "complexity": 0
+    },
+    "Blue_dev.features.usb_link.core": {
+      "path": "Blue_dev/features/usb_link/core.py",
+      "lines": 204,
+      "classes": [
+        "USBListener"
+      ],
+      "functions": [
+        "start_listener",
+        "test_led",
+        "__init__",
+        "open_device",
+        "close",
+        "_send_led",
+        "_execute_mapped",
+        "_read_loop",
+        "start"
+      ],
+      "imports": [
+        "threading",
+        "time",
+        "os",
+        "utils.logger",
+        "utils.config_loader",
+        "subprocess",
+        "usb.core",
+        "usb.util",
+        "serial",
+        "serial",
+        "usb.util",
+        "serial",
+        "serial",
+        "time"
+      ],
+      "complexity": 39
+    },
+    "Blue_dev.features.usb_link.cli": {
+      "path": "Blue_dev/features/usb_link/cli.py",
+      "lines": 47,
+      "classes": [],
+      "functions": [
+        "register_commands",
+        "run_from_args",
+        "run"
+      ],
+      "imports": [
+        "core",
+        "utils.logger",
+        "utils.config_loader",
+        "os"
+      ],
+      "complexity": 7
+    },
+    "Blue_dev.features.anomaly_monitor.__init__": {
+      "path": "Blue_dev/features/anomaly_monitor/__init__.py",
+      "lines": 1,
+      "classes": [],
+      "functions": [],
+      "imports": [],
+      "complexity": 0
+    },
+    "Blue_dev.features.anomaly_monitor.core": {
+      "path": "Blue_dev/features/anomaly_monitor/core.py",
+      "lines": 144,
+      "classes": [
+        "AnomalyMonitor"
+      ],
+      "functions": [
+        "run_interactive",
+        "__init__",
+        "_log",
+        "_check_psutil",
+        "_scapy_sniff",
+        "_loop",
+        "start",
+        "stop",
+        "show_logs",
+        "_proc"
+      ],
+      "imports": [
+        "threading",
+        "time",
+        "os",
+        "json",
+        "datetime",
+        "utils.logger",
+        "utils.config_loader",
+        "psutil",
+        "scapy.all"
+      ],
+      "complexity": 24
+    },
+    "Blue_dev.features.anomaly_monitor.cli": {
+      "path": "Blue_dev/features/anomaly_monitor/cli.py",
+      "lines": 9,
+      "classes": [],
+      "functions": [
+        "register_commands",
+        "run"
+      ],
+      "imports": [
+        "core"
+      ],
+      "complexity": 0
+    },
+    "Blue_dev.features.haptic.__init__": {
+      "path": "Blue_dev/features/haptic/__init__.py",
+      "lines": 1,
+      "classes": [],
+      "functions": [],
+      "imports": [],
+      "complexity": 0
+    },
+    "Blue_dev.features.haptic.core": {
+      "path": "Blue_dev/features/haptic/core.py",
+      "lines": 71,
+      "classes": [],
+      "functions": [
+        "send_pattern",
+        "pair_device",
+        "run_interactive"
+      ],
+      "imports": [
+        "asyncio",
+        "os",
+        "json",
+        "utils.logger",
+        "utils.config_loader",
+        "bleak",
+        "asyncio"
+      ],
+      "complexity": 10
+    },
+    "Blue_dev.features.haptic.cli": {
+      "path": "Blue_dev/features/haptic/cli.py",
+      "lines": 7,
+      "classes": [],
+      "functions": [
+        "register_commands",
+        "run"
+      ],
+      "imports": [
+        "core"
+      ],
+      "complexity": 0
+    },
+    "Blue_dev.utils.config_loader": {
+      "path": "Blue_dev/utils/config_loader.py",
+      "lines": 25,
+      "classes": [],
+      "functions": [
+        "get_feature_config_path",
+        "load_feature_config",
+        "save_feature_config",
+        "get_master_features_path"
+      ],
+      "imports": [
+        "os",
+        "json"
+      ],
+      "complexity": 2
+    },
+    "Blue_dev.utils.menu_helpers": {
+      "path": "Blue_dev/utils/menu_helpers.py",
+      "lines": 12,
+      "classes": [],
+      "functions": [
+        "typewriter",
+        "print_colored_menu",
+        "loading_dots"
+      ],
+      "imports": [
+        "colorama"
+      ],
+      "complexity": 1
+    },
+    "Blue_dev.utils.__init__": {
+      "path": "Blue_dev/utils/__init__.py",
+      "lines": 1,
+      "classes": [],
+      "functions": [],
+      "imports": [],
+      "complexity": 0
+    },
+    "Blue_dev.utils.logger": {
+      "path": "Blue_dev/utils/logger.py",
+      "lines": 8,
+      "classes": [],
+      "functions": [
+        "info",
+        "good",
+        "warn",
+        "error",
+        "dim"
+      ],
+      "imports": [
+        "colorama"
+      ],
+      "complexity": 0
+    },
+    "zomode.__init__": {
+      "path": "zomode/__init__.py",
+      "lines": 114,
+      "classes": [],
+      "functions": [
+        "typewriter",
+        "print_colored_menu",
+        "loading_dots",
+        "startup_animation",
+        "zomode_menu",
+        "tor_menu"
+      ],
+      "imports": [
+        "time",
+        "sys",
+        "colorama"
+      ],
+      "complexity": 19
+    },
+    "zomode.tor_integration": {
+      "path": "zomode/tor_integration.py",
+      "lines": 358,
+      "classes": [
+        "TorManager"
+      ],
+      "functions": [
+        "find_tor_browser_path",
+        "_linux_tor_impl",
+        "_macos_tor_impl",
+        "_windows_tor_impl",
+        "detect_platform",
+        "check_command_exists",
+        "run_subprocess",
+        "tor_safety_check",
+        "tor_proxychains_cmd",
+        "tor_anonsurf_start_cmd",
+        "tor_anonsurf_stop_cmd",
+        "torify_cmd",
+        "tor_browser_cmd",
+        "tor_status_cmd",
+        "tor_install_cmd",
+        "tor_start_cmd",
+        "tor_stop_cmd",
+        "__init__",
+        "_get_platform_impl",
+        "_check_availability"
+      ],
+      "imports": [
+        "os",
+        "platform",
+        "shutil",
+        "subprocess",
+        "glob",
+        "winreg"
+      ],
+      "complexity": 47
+    },
+    "zomode.anomaly_detection": {
+      "path": "zomode/anomaly_detection.py",
+      "lines": 639,
+      "classes": [
+        "NetworkMonitor",
+        "Fore",
+        "Style"
+      ],
+      "functions": [
+        "onist_monitor_start",
+        "onist_monitor_stop",
+        "onist_monitor_status",
+        "onist_alerts",
+        "onist_investigate",
+        "onist_baseline",
+        "onist_connections",
+        "onist_config",
+        "typewriter",
+        "print_colored_menu",
+        "loading_dots",
+        "anomaly_detection_menu",
+        "export_anomaly_logs",
+        "__init__",
+        "load_known_countries",
+        "save_known_countries",
+        "get_country_for_ip",
+        "get_active_connections",
+        "detect_port_scan",
+        "detect_foreign_connections",
+        "detect_suspicious_ports",
+        "monitor_loop",
+        "handle_anomaly",
+        "critical_alert",
+        "warning_alert",
+        "info_alert",
+        "log_anomaly",
+        "start_monitoring",
+        "stop_monitoring",
+        "get_status"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "threading",
+        "socket",
+        "subprocess",
+        "platform",
+        "datetime",
+        "collections",
+        "typing",
+        "ipaddress",
+        "colorama",
+        "psutil",
+        "requests"
+      ],
+      "complexity": 82
+    },
+    "zomode.project_map": {
+      "path": "zomode/project_map.py",
+      "lines": 1057,
+      "classes": [
+        "ProjectAnalyzer",
+        "TerminalGraphRenderer",
+        "InteractiveExplorer",
+        "Fore",
+        "Style"
+      ],
+      "functions": [
+        "project_map_analyze",
+        "project_map_tree",
+        "project_map_network",
+        "project_map_summary",
+        "project_map_interactive",
+        "project_map_export",
+        "project_map_find_cycles",
+        "project_map_stats",
+        "typewriter",
+        "print_colored_menu",
+        "loading_dots",
+        "project_dependency_menu",
+        "__init__",
+        "analyze_project",
+        "find_python_files",
+        "analyze_file",
+        "process_import",
+        "is_internal_module",
+        "__init__",
+        "render_tree_view",
+        "_render_subtree",
+        "render_network_view",
+        "render_cycle_aware_network",
+        "render_simple_list_view",
+        "render_adjacency_matrix",
+        "render_summary",
+        "__init__",
+        "start_interactive_mode",
+        "process_command",
+        "show_help",
+        "list_modules",
+        "view_module",
+        "show_dependencies",
+        "show_reverse_dependencies",
+        "show_external_deps",
+        "view_module_by_number",
+        "find_module",
+        "go_back",
+        "dfs"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "ast",
+        "json",
+        "time",
+        "threading",
+        "pathlib",
+        "collections",
+        "typing",
+        "re",
+        "colorama",
+        "networkx"
+      ],
+      "complexity": 157
+    },
+    "zomode.osint.tools": {
+      "path": "zomode/osint/tools.py",
+      "lines": 304,
+      "classes": [],
+      "functions": [
+        "typewriter",
+        "print_colored_menu",
+        "load_plugins",
+        "create_json_plugin",
+        "run_json_plugin",
+        "install_requirements",
+        "run_script_file",
+        "delete_script",
+        "push_scripts_to_json",
+        "import_script",
+        "loading_dots",
+        "startup_animation",
+        "osint_menu"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "shutil",
+        "subprocess",
+        "platform",
+        "time",
+        "traceback",
+        "colorama"
+      ],
+      "complexity": 49
+    },
+    "zomode.osint.__init__": {
+      "path": "zomode/osint/__init__.py",
+      "lines": 11,
+      "classes": [],
+      "functions": [
+        "osint_menu"
+      ],
+      "imports": [
+        "tools"
+      ],
+      "complexity": 0
+    },
+    "zomode.osint.scripts.sysinfo": {
+      "path": "zomode/osint/scripts/sysinfo.py",
+      "lines": 24,
+      "classes": [],
+      "functions": [],
+      "imports": [
+        "platform",
+        "psutil",
+        "socket",
+        "os"
+      ],
+      "complexity": 1
+    },
+    "gmode.__init__": {
+      "path": "gmode/__init__.py",
+      "lines": 2,
+      "classes": [],
+      "functions": [],
+      "imports": [
+        "menu",
+        "key_generation"
+      ],
+      "complexity": 0
+    },
+    "gmode.menu": {
+      "path": "gmode/menu.py",
+      "lines": 73,
+      "classes": [],
+      "functions": [
+        "_typewriter",
+        "_loading_dots",
+        "launch_web_access",
+        "built_env",
+        "stmp_database",
+        "gmode_menu"
+      ],
+      "imports": [
+        "colorama",
+        "sys",
+        "time",
+        "os",
+        "colorama",
+        "key_generation"
+      ],
+      "complexity": 8
+    },
+    "gmode.key_generation": {
+      "path": "gmode/key_generation.py",
+      "lines": 54,
+      "classes": [],
+      "functions": [
+        "generate_random_key",
+        "generate_key_flow"
+      ],
+      "imports": [
+        "json",
+        "os",
+        "random",
+        "string",
+        "tempfile",
+        "subprocess"
+      ],
+      "complexity": 2
+    }
+  },
+  "external_imports": {
+    "animations": [
+      "random",
+      "shutil",
+      "time",
+      "sys",
+      "colorama",
+      "pyfiglet"
+    ],
+    "voice_input": [
+      "pyaudio",
+      "select",
+      "os",
+      "speech_recognition",
+      "time",
+      "threading",
+      "sys",
+      "subprocess",
+      "typing"
+    ],
+    "parser": [
+      "typing",
+      "json",
+      "difflib",
+      "re"
+    ],
+    "context": [
+      "os",
+      "json",
+      "re"
+    ],
+    "aish": [
+      "json",
+      "colorama",
+      "random",
+      "contextlib",
+      "os",
+      "time",
+      "sys",
+      "subprocess",
+      "typing",
+      "io"
+    ],
+    "utils": [
+      "os",
+      "sys",
+      "subprocess",
+      "typing",
+      "platform"
+    ],
+    "macros": [
+      "json",
+      "typing",
+      "colorama",
+      "os"
+    ],
+    "core_commands": [
+      "json",
+      "zomode.osint",
+      "zipfile",
+      "colorama",
+      "datetime",
+      "psutil",
+      "contextlib",
+      "os",
+      "socket",
+      "re",
+      "sys",
+      "subprocess",
+      "typing",
+      "io",
+      "platform"
+    ],
+    "safety": [
+      "typing",
+      "re"
+    ],
+    "autocomplete": [
+      "prompt_toolkit.document",
+      "zomode.osint",
+      "prompt_toolkit",
+      "os",
+      "prompt_toolkit.formatted_text",
+      "typing",
+      "prompt_toolkit.styles",
+      "prompt_toolkit.completion"
+    ],
+    "explain": [
+      "json"
+    ],
+    "executor": [
+      "json",
+      "colorama",
+      "random",
+      "os",
+      "time",
+      "subprocess",
+      "typing"
+    ],
+    "Blue_dev.feature_loader": [
+      "json",
+      "importlib",
+      "os",
+      "types"
+    ],
+    "Blue_dev.__init__": [
+      "json",
+      "os",
+      "feature_loader",
+      "importlib",
+      "colorama"
+    ],
+    "Blue_dev.features.ble_bridge.core": [
+      "json",
+      "bleak",
+      "os",
+      "time",
+      "asyncio"
+    ],
+    "Blue_dev.features.ble_bridge.cli": [
+      "core"
+    ],
+    "Blue_dev.features.usb_link.core": [
+      "usb.core",
+      "usb.util",
+      "os",
+      "time",
+      "threading",
+      "subprocess",
+      "serial"
+    ],
+    "Blue_dev.features.usb_link.cli": [
+      "core",
+      "os"
+    ],
+    "Blue_dev.features.anomaly_monitor.core": [
+      "json",
+      "psutil",
+      "datetime",
+      "scapy.all",
+      "os",
+      "time",
+      "threading"
+    ],
+    "Blue_dev.features.anomaly_monitor.cli": [
+      "core"
+    ],
+    "Blue_dev.features.haptic.core": [
+      "json",
+      "asyncio",
+      "bleak",
+      "os"
+    ],
+    "Blue_dev.features.haptic.cli": [
+      "core"
+    ],
+    "Blue_dev.utils.config_loader": [
+      "json",
+      "os"
+    ],
+    "Blue_dev.utils.menu_helpers": [
+      "colorama"
+    ],
+    "Blue_dev.utils.logger": [
+      "colorama"
+    ],
+    "zomode.__init__": [
+      "colorama",
+      "time",
+      "sys"
+    ],
+    "zomode.tor_integration": [
+      "glob",
+      "winreg",
+      "os",
+      "shutil",
+      "subprocess",
+      "platform"
+    ],
+    "zomode.anomaly_detection": [
+      "json",
+      "collections",
+      "psutil",
+      "colorama",
+      "datetime",
+      "ipaddress",
+      "os",
+      "socket",
+      "time",
+      "threading",
+      "sys",
+      "requests",
+      "subprocess",
+      "typing",
+      "platform"
+    ],
+    "zomode.project_map": [
+      "json",
+      "collections",
+      "colorama",
+      "networkx",
+      "os",
+      "re",
+      "ast",
+      "pathlib",
+      "time",
+      "threading",
+      "sys",
+      "typing"
+    ],
+    "zomode.osint.tools": [
+      "json",
+      "traceback",
+      "os",
+      "shutil",
+      "time",
+      "sys",
+      "subprocess",
+      "colorama",
+      "platform"
+    ],
+    "zomode.osint.__init__": [
+      "tools"
+    ],
+    "zomode.osint.scripts.sysinfo": [
+      "socket",
+      "psutil",
+      "os",
+      "platform"
+    ],
+    "gmode.__init__": [
+      "menu",
+      "key_generation"
+    ],
+    "gmode.menu": [
+      "os",
+      "time",
+      "key_generation",
+      "sys",
+      "colorama"
+    ],
+    "gmode.key_generation": [
+      "json",
+      "random",
+      "tempfile",
+      "os",
+      "subprocess",
+      "string"
+    ]
+  },
+  "project_files": [
+    "/Users/admin/Downloads/AI-SH 5/animations.py",
+    "/Users/admin/Downloads/AI-SH 5/voice_input.py",
+    "/Users/admin/Downloads/AI-SH 5/parser.py",
+    "/Users/admin/Downloads/AI-SH 5/context.py",
+    "/Users/admin/Downloads/AI-SH 5/aish.py",
+    "/Users/admin/Downloads/AI-SH 5/utils.py",
+    "/Users/admin/Downloads/AI-SH 5/macros.py",
+    "/Users/admin/Downloads/AI-SH 5/core_commands.py",
+    "/Users/admin/Downloads/AI-SH 5/safety.py",
+    "/Users/admin/Downloads/AI-SH 5/autocomplete.py",
+    "/Users/admin/Downloads/AI-SH 5/explain.py",
+    "/Users/admin/Downloads/AI-SH 5/executor.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/feature_loader.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/ble_bridge/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/ble_bridge/core.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/ble_bridge/cli.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/usb_link/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/usb_link/core.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/usb_link/cli.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/anomaly_monitor/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/anomaly_monitor/core.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/anomaly_monitor/cli.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/haptic/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/haptic/core.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/features/haptic/cli.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/utils/config_loader.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/utils/menu_helpers.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/utils/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/Blue_dev/utils/logger.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/tor_integration.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/anomaly_detection.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/project_map.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/osint/tools.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/osint/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/zomode/osint/scripts/sysinfo.py",
+    "/Users/admin/Downloads/AI-SH 5/gmode/__init__.py",
+    "/Users/admin/Downloads/AI-SH 5/gmode/menu.py",
+    "/Users/admin/Downloads/AI-SH 5/gmode/key_generation.py"
+  ]
+}
